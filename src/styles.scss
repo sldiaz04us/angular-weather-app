@@ -56,3 +56,52 @@ html {
 
   --transition-speed: 600ms;
 }
+
+/*
+ * Typography
+ */
+.heading-1 {
+  font-size: 2em;
+  font-weight: 800;
+}
+.heading-2 {
+  font-size: 1.5em;
+  font-weight: 700;
+}
+.large-text {
+  font-size: 1.2em;
+  font-weight: 600;
+}
+.large-text-semibold {
+  font-size: 1.3em;
+  font-weight: 700;
+}
+
+.medium-text {
+  font-size: 1em;
+  font-weight: 600;
+  // color: var(--dark-gray);
+}
+.medium-text-semibold {
+  font-size: 1em;
+  font-weight: 700;
+}
+.normal-text-semibold {
+  font-size: 0.8em;
+  font-weight: 700;
+  color: var(--dark-gray);
+}
+.normal-text-bold {
+  font-size: 0.8em;
+  font-weight: 800;
+}
+.small-text {
+  font-size: 0.6em;
+  font-weight: 400;
+  color: var(--dark-gray);
+}
+.small-text-medium {
+  font-size: 0.7em;
+  font-weight: 500;
+  color: var(--dark-gray);
+}

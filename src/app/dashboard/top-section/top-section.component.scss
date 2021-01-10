@@ -1,0 +1,54 @@
+.top {
+  display: grid;
+  grid-area: main-top;
+  grid-template-columns: 1fr 1fr;
+
+  .temp-control {
+    place-self: start end;
+    display: flex;
+    width: 90px;
+    justify-content: space-between;
+
+    .c-temp,
+    .f-temp {
+      border: var(--dark-border);
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .c-temp {
+      background-color: var(--dashboard-dark);
+      color: white;
+    }
+  }
+  .weather-illustration {
+    grid-column: span 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 270px;
+    }
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .top .weather-illustration img {
+    width: auto;
+  }
+}
+
+@media only screen and (min-width: 720px) {
+  .top .weather-illustration img {
+    width: 400px;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .top .weather-illustration img {
+    width: 500px;
+  }
+}
