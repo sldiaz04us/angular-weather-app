@@ -2,9 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
+import { MatTabsModule } from '@angular/material/tabs';
+
 import { DashboardComponent } from './dashboard.component';
 import { TopSectionComponent } from './top-section/top-section.component';
 import { MiddleSectionComponent } from './middle-section/middle-section.component';
+import { BottomSectionComponent } from './bottom-section/bottom-section.component';
 
 const
   routes: Routes = [
@@ -12,10 +15,11 @@ const
   ];
 
 @NgModule({
-  declarations: [DashboardComponent, TopSectionComponent, MiddleSectionComponent],
+  declarations: [DashboardComponent, TopSectionComponent, MiddleSectionComponent, BottomSectionComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    MatTabsModule
   ]
 })
 export class DashboardModule { }
