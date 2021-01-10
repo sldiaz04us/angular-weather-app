@@ -1,1 +1,55 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
 /* You can add global styles to this file, and also import other style files */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 16px;
+  font-family: "Poppins", sans-serif;
+}
+
+body,
+html {
+  color: var(--dashboard-dark);
+  // background: var(--gradient-yellow);
+}
+
+:root {
+  --vivid-yellow: #f8ce31;
+  --yellow: #fbe698;
+  --light-yellow: #fef5d6;
+  --gradient-yellow: linear-gradient(
+    180deg,
+    var(--light-yellow) 0%,
+    rgba(255, 255, 255, 0.8) 31.05%,
+    #ffffff 83.79%,
+    var(--light-yellow) 100%
+  );
+
+  --dark-gray: #5b7186;
+  --gray: #adb8c2;
+  --light-gray: #dee3e7;
+  --gradient-gray: linear-gradient(
+    180deg,
+    var(--light-gray) 0%,
+    rgba(255, 255, 255, 0.8) 31.05%,
+    #ffffff 83.79%,
+    var(--light-gray) 100%
+  );
+
+  --blue: #69c1f8;
+  --light-blue: #b3e0fb;
+  --lighter-blue: #e1f3fe;
+  --gradient-blue: linear-gradient(
+    180deg,
+    var(--lighter-blue) 0%,
+    rgba(255, 255, 255, 0.8) 31.05%,
+    #ffffff 83.79%,
+    var(--lighter-blue) 100%
+  );
+
+  --dashboard-dark: #333866;
+  --dashboard-light: #adb1cc;
+
+  --transition-speed: 600ms;
+}
