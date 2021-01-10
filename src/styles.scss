@@ -10,8 +10,9 @@
 
 body,
 html {
+  height: 100%;
   color: var(--dashboard-dark);
-  // background: var(--gradient-yellow);
+  background: var(--gradient-blue);
 }
 
 :root {
@@ -50,6 +51,8 @@ html {
 
   --dashboard-dark: #333866;
   --dashboard-light: #adb1cc;
+
+  --dark-border: 1px solid var(--dashboard-dark);
 
   --transition-speed: 600ms;
 }
