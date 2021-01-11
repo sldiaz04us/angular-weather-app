@@ -8,6 +8,7 @@ import { DashboardComponent } from './dashboard.component';
 import { TopSectionComponent } from './top-section/top-section.component';
 import { MiddleSectionComponent } from './middle-section/middle-section.component';
 import { BottomSectionComponent } from './bottom-section/bottom-section.component';
+import { AsideSectionComponent } from './aside-section/aside-section.component';
 
 const
   routes: Routes = [
@@ -15,7 +16,7 @@ const
   ];
 
 @NgModule({
-  declarations: [DashboardComponent, TopSectionComponent, MiddleSectionComponent, BottomSectionComponent],
+  declarations: [DashboardComponent, TopSectionComponent, MiddleSectionComponent, BottomSectionComponent, AsideSectionComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
