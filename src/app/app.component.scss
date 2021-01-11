@@ -1,23 +1,9 @@
-#container {
-  width: 100vw;
+:host {
+  width: 100%;
   height: 100%;
 
   display: grid;
   grid-template-areas:
-    "t t t"
-    "m m m"
-    "m m m"
-    "a a a";
-}
-
-@media only screen and (min-width: 1440px) {
-  #container {
-    width: 100vw;
-    height: 100%;
-    display: grid;
-    grid-template-areas:
-      "t t t"
-      "m m a"
-      "m m a";
-  }
+    "toolbar"
+    "dashboard";
 }

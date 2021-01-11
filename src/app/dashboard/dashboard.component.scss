@@ -1,17 +1,30 @@
-#main-content {
+:host {
   display: grid;
-  grid-area: m;
+  grid-area: dashboard;
+  grid-gap: 2em;
   grid-template-areas:
-    "main-top"
-    "main-middle"
-    "main-bottom";
-
+    "main"
+    "aside";
   padding: 1rem;
-}
 
-@media only screen and (min-width: 600px) {
   #main-content {
+    display: grid;
+    grid-area: main;
+    grid-template-areas:
+      "main-top"
+      "main-middle"
+      "main-bottom";
+  }
+
+  @media only screen and (min-width: 600px) {
     margin-left: 5rem;
   }
-}
 
+  @media only screen and (min-width: 1440px) {
+    grid-template-areas: "main main aside";
+  }
+
+  @media only screen and (min-width: 1920px) {
+    grid-template-areas: "main main main aside";
+  }
+}
