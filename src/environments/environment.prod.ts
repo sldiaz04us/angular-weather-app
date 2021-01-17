@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  openWeatherApiKey: '{Your OpenWeather API key}'
 };
