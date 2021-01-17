@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+
+import { Current } from '../openweather-api.model';
 
 @Component({
-  selector: 'app-top-section',
+  selector: 'dashboard-top-section',
   templateUrl: './top-section.component.html',
   styleUrls: ['./top-section.component.scss']
 })
 export class TopSectionComponent implements OnInit {
+  @Input() current: Current;
 
   constructor() { }
 

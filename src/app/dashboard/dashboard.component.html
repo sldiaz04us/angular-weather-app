@@ -1,6 +1,16 @@
 <main id="main-content">
-  <app-top-section></app-top-section>
-  <app-middle-section></app-middle-section>
-  <app-bottom-section></app-bottom-section>
+  <dashboard-top-section [current]="currentWeather"></dashboard-top-section>
+  <dashboard-middle-section
+    [current]="currentWeather"
+    [unitSymbol]="unitSymbol"
+  ></dashboard-middle-section>
+  <dashboard-bottom-section
+    [hourlyWeather]="hourlyWeather"
+    [dailyWeather]="dailyWeather"
+  ></dashboard-bottom-section>
 </main>
-<app-aside-section></app-aside-section>
+<dashboard-aside-section
+  [current]="currentWeather"
+  [unitSymbol]="unitSymbol"
+  [airPollutionIndex]="airPollutionIndex"
+></dashboard-aside-section>

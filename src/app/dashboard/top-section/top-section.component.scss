@@ -30,25 +30,29 @@
     justify-content: center;
     align-items: center;
     img {
-      width: 270px;
+      width: 12em;
     }
-  }
-}
+    .temp-info {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 1em;
 
-@media only screen and (min-width: 600px) {
-  .top .weather-illustration img {
-    width: auto;
+      .current-temp p:last-child,
+      .feels-like p:first-child {
+        color: var(--dark-gray);
+      }
+    }
   }
 }
 
 @media only screen and (min-width: 720px) {
   .top .weather-illustration img {
-    width: 400px;
+    width: 16em;
   }
 }
 
 @media only screen and (min-width: 1024px) {
   .top .weather-illustration img {
-    width: 500px;
+    width: 20em;
   }
 }

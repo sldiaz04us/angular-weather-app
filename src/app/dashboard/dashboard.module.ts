@@ -9,18 +9,19 @@ import { TopSectionComponent } from './top-section/top-section.component';
 import { MiddleSectionComponent } from './middle-section/middle-section.component';
 import { BottomSectionComponent } from './bottom-section/bottom-section.component';
 import { AsideSectionComponent } from './aside-section/aside-section.component';
+import { SharedModule } from '../shared/shared.module';
 
-const
-  routes: Routes = [
-    { path: '', component: DashboardComponent }
-  ];
+const routes: Routes = [
+  { path: '', component: DashboardComponent }
+];
 
 @NgModule({
   declarations: [DashboardComponent, TopSectionComponent, MiddleSectionComponent, BottomSectionComponent, AsideSectionComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    MatTabsModule
+    MatTabsModule,
+    SharedModule
   ]
 })
 export class DashboardModule { }
