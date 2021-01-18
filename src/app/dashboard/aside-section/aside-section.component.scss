@@ -25,6 +25,7 @@
     .sunset {
       display: flex;
       justify-content: flex-start;
+      align-items: center;
 
       img {
         width: 52px;
@@ -37,16 +38,16 @@
   .bottom {
     display: grid;
     grid-area: aside-bottom;
-    gap: 1em;
-    grid-template-columns: repeat(auto-fit, minmax(158px, 160px));
+    gap: .5em;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 158px));
     margin-bottom: 5rem;
 
     .forecast-widget {
-      width: 158px;
+      width: 150px;
       height: 150px;
       border-radius: 20px;
       box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.25);
-      padding: 1em 1.5em;
+      padding: 1em;
       h2 {
         color: var(--dark-gray);
       }

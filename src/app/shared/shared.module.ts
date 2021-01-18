@@ -5,7 +5,9 @@ import {
   ToIntegerPipe,
   CustomDatePipe,
   UvindexPipe,
-  AirPollutionPipe
+  AirPollutionPipe,
+  WindDirectionPipe,
+  HumidityRangePipe
 } from './pipes/index';
 
 import {
@@ -19,7 +21,9 @@ const modules = [
   UvindexPipe,
   AirPollutionPipe,
   UvindexDirective,
-  AirPollutionDirective
+  AirPollutionDirective,
+  WindDirectionPipe,
+  HumidityRangePipe
 ];
 
 @NgModule({

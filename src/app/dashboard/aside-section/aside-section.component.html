@@ -1,39 +1,48 @@
 <section class="top">
   <h2 class="medium-text-semibold">Sunrise & Sunset</h2>
   <div class="sunrise">
-    <img src="assets/images/sunrise.svg" alt="Sunrise" />
+    <img src="assets/icons/dashboard/sunrise.svg" alt="Sunrise" />
     <p class="medium-text-semibold">
-      5:39 am <br />
-      <span class="small-text-medium">-1m 46s</span>
+      {{ current?.sunrise | customDate: "shortTime" }}
     </p>
   </div>
   <div class="sunset">
-    <img src="assets/images/sunset.svg" alt="Sunset" />
+    <img src="assets/icons/dashboard/sunset.svg" alt="Sunset" />
     <p class="medium-text-semibold">
-      5:39 am <br />
-      <span class="small-text-medium">-1m 46s</span>
+      {{ current?.sunset | customDate: "shortTime" }}
     </p>
   </div>
 </section>
 <section class="bottom">
   <div class="forecast-widget card">
     <h2 class="medium-text">Wind Status</h2>
-    <p class="large-text-semibold">16 <span class="small-text">km/h</span></p>
-    <p class="medium-text">wsw</p>
+    <p class="large-text-semibold">
+      {{ current?.wind_speed }} <span class="small-text">{{ unitSymbol }}</span>
+    </p>
+    <p class="medium-text">{{ current?.wind_deg | windDirection }}</p>
   </div>
   <div class="forecast-widget card">
     <h2 class="medium-text">Visibility</h2>
-    <p class="large-text-semibold">16 <span class="small-text">km</span></p>
+    <p class="large-text-semibold">
+      {{ current?.visibility }} <span class="small-text">m</span>
+    </p>
     <p class="medium-text">Average</p>
   </div>
   <div class="forecast-widget card">
     <h2 class="medium-text">Humidity</h2>
-    <p class="large-text-semibold">16 <span class="small-text">%</span></p>
-    <p class="medium-text">Normal</p>
+    <p class="large-text-semibold">
+      {{ current?.humidity }} <span class="small-text">%</span>
+    </p>
+    <p class="medium-text">{{ current?.humidity | humidityRange }}</p>
+  </div>
+  <div class="forecast-widget card">
+    <h2 class="medium-text">UV index</h2>
+    <p class="large-text-semibold">{{ current?.uvi | toInteger }}</p>
+    <p class="medium-text">{{ current?.uvi | uvindex }}</p>
   </div>
   <div class="forecast-widget card">
     <h2 class="medium-text">Air Quality</h2>
-    <p class="large-text-semibold">16</p>
-    <p class="medium-text">Good</p>
+    <p class="large-text-semibold">{{ airPollutionIndex }}</p>
+    <p class="medium-text">{{ airPollutionIndex | airPollution }}</p>
   </div>
 </section>

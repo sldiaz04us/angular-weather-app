@@ -1,11 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+
+import { Current } from '../openweather-api.model';
 
 @Component({
-  selector: 'app-aside-section',
+  selector: 'dashboard-aside-section',
   templateUrl: './aside-section.component.html',
   styleUrls: ['./aside-section.component.scss']
 })
 export class AsideSectionComponent implements OnInit {
+  @Input() current: Current;
+  @Input() airPollutionIndex: number;
+  @Input() unitSymbol: string;
 
   constructor() { }
 
