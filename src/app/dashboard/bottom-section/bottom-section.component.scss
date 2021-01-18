@@ -1,7 +1,7 @@
 .today-forecast {
   display: grid;
-  gap: 1em;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 110px));
+  gap: .5em;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 100px));
 
   padding: 1em 0;
 
@@ -18,37 +18,52 @@
     align-items: center;
 
     img {
-      width: 6em;
-      height: 6em;
+      width: 5em;
+      height: 5em;
     }
   }
 }
 
 .week-forecast {
   display: grid;
-  gap: 1.5em;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 110px));
+  gap: .5em;
+  row-gap: 1em;
+  grid-template-columns: repeat(auto-fit, minmax(146px, 156px));
 
-  padding: 3em 0;
+  padding: 1.5em 0;
 
   .widget {
+    display: grid;
+    gap: 1em;
+    grid-template-rows: 1fr 1fr;
+
     position: relative;
-    width: 100px;
-    height: 96px;
+    width: 146px;
+    height: 110px;
+    padding: 1em;
     background: #ffffff;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
+    .main{
+        display: flex;
+        justify-content: space-between;
 
-    img {
-      position: absolute;
-      top: -2em;
-      width: 6em;
-      height: 6em;
+        img {
+            position: absolute;
+            top: -1em;
+            right: -1em;
+            width: 4em;
+            height: 4em;
+        }
     }
-  }
+    .temp{
+        display: flex;
+        justify-content: space-evenly;
+
+        .min, span{
+            color: var(--dark-gray);
+        }
+    }
+}
 }

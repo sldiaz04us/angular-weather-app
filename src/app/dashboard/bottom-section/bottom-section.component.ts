@@ -1,11 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+
+import { Current, Daily } from '../openweather-api.model';
 
 @Component({
-  selector: 'app-bottom-section',
+  selector: 'dashboard-bottom-section',
   templateUrl: './bottom-section.component.html',
   styleUrls: ['./bottom-section.component.scss']
 })
 export class BottomSectionComponent implements OnInit {
+  @Input() hourlyWeather: Current[];
+  @Input() dailyWeather: Daily[];
 
   constructor() { }
 

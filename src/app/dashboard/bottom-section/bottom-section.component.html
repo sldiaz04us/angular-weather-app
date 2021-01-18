@@ -2,89 +2,58 @@
   <mat-tab-group>
     <mat-tab label="Today">
       <div class="today-forecast">
-        <div class="widget">
-          <p class="medium-text">Now</p>
-          <img src="assets/images/base-sun.svg" alt="Weather Illustration" />
-          <p class="medium-text">22°</p>
-        </div>
-        <div class="widget">
-          <p class="medium-text">7 pm</p>
-          <img src="assets/images/sunny-sun.svg" alt="Weather Illustration" />
-          <p class="medium-text">21°</p>
-        </div>
-        <div class="widget">
-          <p class="medium-text">8pm</p>
+        <div
+          *ngFor="let hourly of hourlyWeather; first as isFirst"
+          class="widget"
+        >
+          <p class="medium-text">
+            {{ isFirst ? "Now" : (hourly.dt | customDate: "shortTime") }}
+          </p>
           <img
-            src="assets/images/blue-and-white-cloud.svg"
+            [src]="
+              'assets/icons/weather-conditions/' +
+              hourly.weather[0].icon +
+              '.svg'
+            "
             alt="Weather Illustration"
           />
-          <p class="medium-text">20°</p>
-        </div>
-        <div class="widget">
-          <p class="medium-text">Now</p>
-          <img src="assets/images/base-sun.svg" alt="Weather Illustration" />
-          <p class="medium-text">22°</p>
-        </div>
-        <div class="widget">
-          <p class="medium-text">7 pm</p>
-          <img src="assets/images/sunny-sun.svg" alt="Weather Illustration" />
-          <p class="medium-text">21°</p>
-        </div>
-        <div class="widget">
-          <p class="medium-text">8pm</p>
-          <img
-            src="assets/images/blue-and-white-cloud.svg"
-            alt="Weather Illustration"
-          />
-          <p class="medium-text">20°</p>
+          <p class="medium-text">{{ hourly.temp | toInteger }}°</p>
         </div>
       </div>
     </mat-tab>
     <mat-tab label="Week">
       <div class="week-forecast">
-        <div class="widget">
-          <img src="assets/images/base-sun.svg" alt="Weather Illustration" />
-          <p class="large-text">29°</p>
-          <p class="small-text-medium">Today</p>
-        </div>
-        <div class="widget">
-          <img src="assets/images/sunny-sun.svg" alt="Weather Illustration" />
-          <p class="large-text">27°</p>
-          <p class="small-text-medium">Monday</p>
-        </div>
-        <div class="widget">
-          <img
-            src="assets/images/blue-and-white-cloud.svg"
-            alt="Weather Illustration"
-          />
-          <p class="large-text">22°</p>
-          <p class="small-text-medium">Tuesday</p>
-        </div>
-        <div class="widget">
-          <img src="assets/images/base-sun.svg" alt="Weather Illustration" />
-          <p class="large-text">29°</p>
-          <p class="small-text-medium">Today</p>
-        </div>
-        <div class="widget">
-          <img src="assets/images/sunny-sun.svg" alt="Weather Illustration" />
-          <p class="large-text">27°</p>
-          <p class="small-text-medium">Monday</p>
-        </div>
-        <div class="widget">
-          <img
-            src="assets/images/blue-and-white-cloud.svg"
-            alt="Weather Illustration"
-          />
-          <p class="large-text">22°</p>
-          <p class="small-text-medium">Tuesday</p>
-        </div>
-        <div class="widget">
-          <img
-            src="assets/images/gray-and-white-cloud.svg"
-            alt="Weather Illustration"
-          />
-          <p class="large-text">22°</p>
-          <p class="small-text-medium">Tuesday</p>
+        <div
+          *ngFor="let daily of dailyWeather; first as isFirst"
+          class="widget"
+        >
+          <div class="main">
+            <div class="date">
+              <div class="day medium-text-semibold">
+                {{ isFirst ? "Today" : (daily.dt | customDate: "MMM d") }}
+              </div>
+              <div class="desc small-text-medium">
+                {{ daily.weather[0].description | titlecase }}
+              </div>
+            </div>
+            <img
+              [src]="
+                'assets/icons/weather-conditions/' +
+                daily.weather[0].icon +
+                '.svg'
+              "
+              alt="Weather Illustration"
+            />
+          </div>
+          <div class="temp">
+            <p class="max medium-text-semibold">
+              {{ daily.temp.max | toInteger }}°F
+            </p>
+            <span>|</span>
+            <p class="min medium-text-semibold">
+              {{ daily.temp.min | toInteger }}°F
+            </p>
+          </div>
         </div>
       </div>
     </mat-tab>
