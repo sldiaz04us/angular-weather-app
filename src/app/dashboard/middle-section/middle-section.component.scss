@@ -4,11 +4,11 @@
   grid-template-rows: 1fr 1fr;
   grid-row-gap: 1em;
 
-  margin-bottom: 2em;
+  margin: 2em 0;
 
   .humidity-wind {
     display: grid;
-    grid-gap: 1em;
+    grid-gap: 2em;
     grid-template-columns: 1fr 1fr;
     .humidity {
       place-self: center end;
@@ -31,42 +31,58 @@
       }
     }
   }
-  .uv-pollution-pollen {
+  .uv-pollution {
     display: grid;
-    grid-gap: 1em;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 2em;
+    grid-template-columns: 1fr 1fr;
 
     .uv {
       place-self: center end;
-      .chip {
-        background-color: var(--light-yellow);
-        color: var(--vivid-yellow);
-        border-color: var(--yellow);
-      }
     }
     .pollution {
-      place-self: center;
-      .chip {
-        background-color: var(--lighter-blue);
-        color: var(--blue);
-        border-color: var(--light-blue);
-      }
-    }
-    .pollen {
       place-self: center start;
-      .chip {
-        background-color: var(--light-gray);
-        color: var(--dark-gray);
-        border-color: var(--gray);
-      }
     }
     .uv,
-    .pollution,
-    .pollen {
+    .pollution {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+
+      .low,
+      .good {
+        color: #006700;
+        border-color: #afcfaf;
+        background-color: #bfd9bf;
+      }
+      .uv-moderate,
+      .fair {
+        color: var(--vivid-yellow);
+        border-color: var(--yellow);
+        background-color: var(--light-yellow);
+      }
+      .high,
+      .air-moderate {
+        color: #b36200;
+        border-color: #ffb733;
+        background-color: #ffc04d;
+      }
+      .very-high,
+      .poor {
+        color: #bf1414;
+        border-color: #ec4d4d;
+        background-color: #ef6464;
+      }
+      .extreme,
+      .very-poor {
+        color: #8c248c;
+        border-color: #d55bd5;
+        background-color: #da70da;
+      }
+    }
+    .uv p,
+    .pollution p {
+      color: var(--dark-gray);
     }
 
     .chip {

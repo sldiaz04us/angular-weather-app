@@ -4,9 +4,23 @@ import { CommonModule } from '@angular/common';
 import {
   ToIntegerPipe,
   CustomDatePipe,
+  UvindexPipe,
+  AirPollutionPipe
 } from './pipes/index';
 
-const modules = [ToIntegerPipe, CustomDatePipe,];
+import {
+  UvindexDirective,
+  AirPollutionDirective
+} from './directives/index';
+
+const modules = [
+  ToIntegerPipe,
+  CustomDatePipe,
+  UvindexPipe,
+  AirPollutionPipe,
+  UvindexDirective,
+  AirPollutionDirective
+];
 
 @NgModule({
   declarations: modules,

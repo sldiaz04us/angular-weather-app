@@ -2,6 +2,7 @@
   <dashboard-top-section [current]="currentWeather"></dashboard-top-section>
   <dashboard-middle-section
     [current]="currentWeather"
+    [airPollutionIndex]="airPollutionIndex"
     [unitSymbol]="unitSymbol"
   ></dashboard-middle-section>
   <dashboard-bottom-section
@@ -11,6 +12,6 @@
 </main>
 <dashboard-aside-section
   [current]="currentWeather"
-  [unitSymbol]="unitSymbol"
   [airPollutionIndex]="airPollutionIndex"
+  [unitSymbol]="unitSymbol"
 ></dashboard-aside-section>

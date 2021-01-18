@@ -1,27 +1,29 @@
 <section class="middle">
   <div class="humidity-wind">
     <div class="humidity">
-      <img src="assets/images/icons/drops.svg" alt="Drop" />
-      <p class="medium-text-semibold">16%</p>
+      <img src="assets/icons/dashboard/drops.svg" alt="Drop" />
+      <p class="medium-text-semibold">{{ current?.humidity }} %</p>
     </div>
     <div class="wind">
-      <img src="assets/images/icons/wind.svg" alt="Wind" />
-      <p class="medium-text-semibold">24km/h</p>
+      <img src="assets/icons/dashboard/wind.svg" alt="Wind" />
+      <p class="medium-text-semibold">
+        {{ current?.wind_speed }} {{ unitSymbol }}
+      </p>
     </div>
   </div>
 
-  <div class="uv-pollution-pollen">
+  <div class="uv-pollution">
     <div class="uv">
-      <div class="chip">High</div>
-      <p class="normal-text-bold">UV</p>
+      <div class="chip" [appUvindex]="current?.uvi">
+        {{ current?.uvi | uvindex }}
+      </div>
+      <p class="medium-text-semibold">UV</p>
     </div>
     <div class="pollution">
-      <div class="chip">Low</div>
-      <p class="normal-text-bold">Pollution</p>
-    </div>
-    <div class="pollen">
-      <div class="chip">Moderate</div>
-      <p class="normal-text-bold">Pollen</p>
+      <div class="chip" [appAirPollution]="airPollutionIndex">
+        {{ airPollutionIndex | airPollution }}
+      </div>
+      <p class="medium-text-semibold">Pollution</p>
     </div>
   </div>
 </section>

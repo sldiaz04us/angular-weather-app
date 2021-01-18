@@ -10,9 +10,14 @@ import { MiddleSectionComponent } from './middle-section/middle-section.componen
 import { BottomSectionComponent } from './bottom-section/bottom-section.component';
 import { AsideSectionComponent } from './aside-section/aside-section.component';
 import { SharedModule } from '../shared/shared.module';
+import { DashboardResolver } from './dashboard.resolver';
 
 const routes: Routes = [
-  { path: '', component: DashboardComponent }
+  {
+    path: '',
+    component: DashboardComponent,
+    resolve: { openWeatherApiResponse: DashboardResolver } // uncomment only to use with OpenWeather API
+  }
 ];
 
 @NgModule({
