@@ -39,6 +39,12 @@
       &:last-child {
         margin-top: auto;
       }
+
+      &.router-link-active {
+        background-color: var(--blue);
+        border-bottom: 0.2em solid var(--dashboard-dark);
+        border-left:none;
+      }
     }
   }
 }
@@ -106,6 +112,11 @@
 
       .logo {
         display: block;
+      }
+
+      .nav-item.router-link-active {
+        border-left: 0.2em solid var(--dashboard-dark);
+        border-bottom: none;
       }
     }
   }
