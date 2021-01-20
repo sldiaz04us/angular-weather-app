@@ -1,5 +1,10 @@
 <main id="main-content">
-  <dashboard-top-section [current]="currentWeather"></dashboard-top-section>
+  <dashboard-top-section
+    [current]="currentWeather"
+    [tempSymbol]="temperatureSymbol"
+    [unit]="unitMeasurement"
+    (temperatureChanged)="onTempChanged($event)"
+  ></dashboard-top-section>
   <dashboard-middle-section
     [current]="currentWeather"
     [airPollutionIndex]="airPollutionIndex"
@@ -8,6 +13,7 @@
   <dashboard-bottom-section
     [hourlyWeather]="hourlyWeather"
     [dailyWeather]="dailyWeather"
+    [tempSymbol]="temperatureSymbol"
   ></dashboard-bottom-section>
 </main>
 <dashboard-aside-section

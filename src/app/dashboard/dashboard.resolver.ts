@@ -7,7 +7,6 @@ import {
 
 import { Observable } from 'rxjs';
 
-import { UnitsMeasurement } from '../shared/enums/units-measurement.enum';
 import { OpenWeatherApiResponse } from './openweather-api.model';
 import { DashboardService } from './dashboard.service';
 
@@ -18,6 +17,6 @@ export class DashboardResolver implements Resolve<OpenWeatherApiResponse> {
   constructor(private dashboardService: DashboardService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<OpenWeatherApiResponse> {
-    return this.dashboardService.getCurrentWeather(29.7858, -95.8244, UnitsMeasurement.imperial);
+    return this.dashboardService.getCurrentWeather();
   }
 }

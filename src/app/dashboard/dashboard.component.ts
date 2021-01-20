@@ -18,6 +18,8 @@ export class DashboardComponent implements OnInit {
   dailyWeather: Daily[];
   airPollutionIndex: number;
   unitSymbol: string;
+  temperatureSymbol: string;
+  unitMeasurement: UnitsMeasurement;
 
   constructor(
     private dashboardService: DashboardService,
@@ -25,13 +27,7 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.setWeatherData();
-    this.setAirPollutionData();
-    this.setUnitSymbol(UnitsMeasurement.imperial);
-  }
-
   /* Using the DashboardResolver */
-  private setWeatherData(): void {
     this.route.data.pipe(
       map(data => {
         return data.openWeatherApiResponse as OpenWeatherApiResponse;
@@ -41,20 +37,42 @@ export class DashboardComponent implements OnInit {
       this.hourlyWeather = weather.hourly.slice(0, 8);
       this.dailyWeather = weather.daily;
     });
+
+    this.setAirPollutionData();
+    this.setUnitAndTempSymbols(UnitsMeasurement.imperial);
+  }
+
+  onTempChanged(unitMeasurement: UnitsMeasurement): void {
+    this.setWeatherData(unitMeasurement);
+    this.setAirPollutionData(); // just to update the air pollution data, this call is not needed
+  }
+
+
+  private setWeatherData(unitMeasurement: UnitsMeasurement): void {
+    this.dashboardService.getCurrentWeather(unitMeasurement)
+      .subscribe(weather => {
+        this.currentWeather = weather.current;
+        this.hourlyWeather = weather.hourly.slice(0, 8); // get only 8 hours forecast
+        this.dailyWeather = weather.daily;
+        this.setUnitAndTempSymbols(unitMeasurement);
+      });
   }
 
   private setAirPollutionData(): void {
-    this.dashboardService.getAirPollution(29.7858, -95.8244)
+    this.dashboardService.getAirPollution()
       .subscribe(airPollution => {
         this.airPollutionIndex = airPollution.list[0].main.aqi;
       });
   }
 
-  private setUnitSymbol(units: UnitsMeasurement): void {
-    if (units === UnitsMeasurement.standard || units === UnitsMeasurement.metric) {
+  private setUnitAndTempSymbols(unit: UnitsMeasurement): void {
+    this.unitMeasurement = unit;
+    if (unit === UnitsMeasurement.metric) {
       this.unitSymbol = 'm/s';
+      this.temperatureSymbol = '°C';
     } else {
       this.unitSymbol = 'mph';
+      this.temperatureSymbol = '°F';
     }
   }
 

@@ -4,8 +4,22 @@
     <p class="normal-text-semibold">{{ current?.dt | customDate }}</p>
   </div>
   <div class="temp-control">
-    <p class="c-temp">°C</p>
-    <p class="f-temp">°F</p>
+    <button
+      class="c-temp"
+      [class.active]="unit === 'metric'"
+      [disabled]="unit === 'metric'"
+      (click)="changeTempToCelsius()"
+    >
+      °C
+    </button>
+    <button
+      class="f-temp"
+      [class.active]="unit === 'imperial'"
+      [disabled]="unit === 'imperial'"
+      (click)="changeTempToFahrenheit()"
+    >
+      °F
+    </button>
   </div>
   <div class="weather-illustration">
     <img
@@ -16,12 +30,16 @@
     />
     <div class="temp-info">
       <div class="current-temp">
-        <p class="large-text-semibold">{{ current?.temp | toInteger }}°F</p>
+        <p class="large-text-semibold">
+          {{ current?.temp | toInteger }}{{ tempSymbol }}
+        </p>
         <p class="medium-text">{{ current?.weather[0].main }}</p>
       </div>
       <div class="feels-like">
         <p class="medium-text">Feels Like</p>
-        <p class="medium-text-semibold">{{current?.feels_like | toInteger}}°F</p>
+        <p class="medium-text-semibold">
+          {{ current?.feels_like | toInteger }}{{ tempSymbol }}
+        </p>
       </div>
     </div>
   </div>

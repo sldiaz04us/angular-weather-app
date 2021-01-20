@@ -47,11 +47,11 @@
           </div>
           <div class="temp">
             <p class="max medium-text-semibold">
-              {{ daily.temp.max | toInteger }}°F
+              {{ daily.temp.max | toInteger }}{{ tempSymbol }}
             </p>
             <span>|</span>
             <p class="min medium-text-semibold">
-              {{ daily.temp.min | toInteger }}°F
+              {{ daily.temp.min | toInteger }}{{ tempSymbol }}
             </p>
           </div>
         </div>

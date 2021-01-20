@@ -27,9 +27,13 @@ export interface Current {
   weather: Weather[];
   snow?: Snow;
   pop?: number;
+  rain?: Rain;
 }
 
 export interface Snow {
+  '1h': number;
+}
+export interface Rain {
   '1h': number;
 }
 

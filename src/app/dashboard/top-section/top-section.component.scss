@@ -18,10 +18,20 @@
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-    .c-temp {
-      background-color: var(--dashboard-dark);
-      color: white;
+      outline: none;
+      background-color: inherit;
+      transition: background-color 500ms ease-in-out;
+      cursor: pointer;
+
+      &.active {
+        background-color: var(--dashboard-dark);
+        color: white;
+        cursor: default;
+      }
+      &:not(.active):hover {
+        background-color: var(--dashboard-dark);
+        color: white;
+      }
     }
   }
   .weather-illustration {

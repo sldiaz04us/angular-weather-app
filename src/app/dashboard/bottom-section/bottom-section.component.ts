@@ -10,6 +10,7 @@ import { Current, Daily } from '../openweather-api.model';
 export class BottomSectionComponent implements OnInit {
   @Input() hourlyWeather: Current[];
   @Input() dailyWeather: Daily[];
+  @Input() tempSymbol: string;
 
   constructor() { }
 
