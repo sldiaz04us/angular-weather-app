@@ -11,7 +11,7 @@ import {
   staticWeatherDataInCelsius,
   staticWeatherDataInFahrenheit,
   staticAirPollutionData
-} from './openWeatherMockData';
+} from './openweather-mock.data';
 
 @Injectable({
   providedIn: 'root'

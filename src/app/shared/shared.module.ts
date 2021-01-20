@@ -4,33 +4,33 @@ import { CommonModule } from '@angular/common';
 import {
   ToIntegerPipe,
   CustomDatePipe,
-  UvindexPipe,
+  UvIndexPipe,
   AirPollutionPipe,
   WindDirectionPipe,
   HumidityRangePipe
 } from './pipes/index';
 
 import {
-  UvindexDirective,
+  UvIndexDirective,
   AirPollutionDirective
 } from './directives/index';
 
-const modules = [
+const sharedItems = [
   ToIntegerPipe,
   CustomDatePipe,
-  UvindexPipe,
+  UvIndexPipe,
   AirPollutionPipe,
-  UvindexDirective,
+  UvIndexDirective,
   AirPollutionDirective,
   WindDirectionPipe,
   HumidityRangePipe
 ];
 
 @NgModule({
-  declarations: modules,
+  declarations: [...sharedItems],
   imports: [
     CommonModule
   ],
-  exports: modules
+  exports: [...sharedItems]
 })
 export class SharedModule { }

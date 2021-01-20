@@ -1,9 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'uvindex'
+  name: 'uvIndex'
 })
-export class UvindexPipe implements PipeTransform {
+export class UvIndexPipe implements PipeTransform {
   private readonly uvi = ['Low', 'Low', 'Low', 'Moderate', 'Moderate', 'Moderate', 'High', 'High', 'Very high', 'Very high', 'Very high'];
 
   transform(value: number): string {

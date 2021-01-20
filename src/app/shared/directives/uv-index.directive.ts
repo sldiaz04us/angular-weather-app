@@ -1,12 +1,12 @@
 import { Directive, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
 
 @Directive({
-  selector: '[appUvindex]'
+  selector: '[appUvIndex]'
 })
-export class UvindexDirective implements OnInit {
+export class UvIndexDirective implements OnInit {
   private readonly uvi = ['low', 'low', 'low', 'uv-moderate', 'uv-moderate', 'uv-moderate', 'high', 'high', 'very-high', 'very-high', 'very-high'];
 
-  @Input('appUvindex') uvIndex: number;
+  @Input('appUvIndex') uvIndex: number;
 
   constructor(
     private el: ElementRef,
