@@ -1,11 +1,19 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { GeolocationService } from '@ng-web-apis/geolocation';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
+import { GeolocationApiService } from './core/services/geolocation-api.service';
+import { AgreementDialogService } from './core/dialog/agreement-dialog.service';
 
+export function geoLocationFactory(geoLocationService: GeolocationApiService
+): () => Promise<boolean> {
+  return () => geoLocationService.load();
+}
 @NgModule({
   declarations: [
     AppComponent
@@ -13,10 +21,17 @@ import { CoreModule } from './core/core.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
     CoreModule,
-    BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: geoLocationFactory,
+      deps: [GeolocationApiService, AgreementDialogService, GeolocationService],
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

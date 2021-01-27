@@ -147,7 +147,8 @@
       "element",
       [
         "app",
-        "dashboard"
+        "dashboard",
+        "widget"
       ],
       "kebab-case"
     ]
