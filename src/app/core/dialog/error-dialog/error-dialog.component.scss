@@ -1,0 +1,29 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  color: var(--dashboard-dark) !important;
+
+  .mat-dialog-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      width: 100%;
+      height: 6em;
+      margin: 1em 0;
+    }
+
+    .error-message {
+      background: var(--light-yellow);
+      margin-top: 1em;
+      padding: 1rem;
+      font-family: monospace;
+      word-break: break-all;
+    }
+  }
+}
