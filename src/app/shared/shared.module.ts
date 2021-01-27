@@ -14,6 +14,7 @@ import {
   UvIndexDirective,
   AirPollutionDirective
 } from './directives/index';
+import { EmptyStateComponent } from './widgets/empty-state/empty-state.component';
 
 const sharedItems = [
   ToIntegerPipe,
@@ -23,7 +24,8 @@ const sharedItems = [
   UvIndexDirective,
   AirPollutionDirective,
   WindDirectionPipe,
-  HumidityRangePipe
+  HumidityRangePipe,
+  EmptyStateComponent
 ];
 
 @NgModule({

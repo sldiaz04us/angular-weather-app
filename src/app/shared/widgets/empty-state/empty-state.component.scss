@@ -1,0 +1,25 @@
+:host {
+  display: grid;
+  grid-area: main;
+}
+:host ::ng-deep .empty-state {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 100%;
+    max-width: 16em;
+  }
+
+  p {
+    max-width: 20em;
+    margin-bottom: 1em;
+  }
+
+  button {
+    text-transform: uppercase;
+  }
+}
