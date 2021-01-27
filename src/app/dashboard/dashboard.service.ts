@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { Observable, of } from 'rxjs';
+import { PermissionsService } from '@ng-web-apis/permissions';
+
+import { Observable, of, Subject } from 'rxjs';
 
 import { OpenWeatherApiService } from '../core/api/openweather-api.service';
 import { UnitsMeasurement } from '../shared/enums/units-measurement.enum';
@@ -15,10 +17,20 @@ import { GeolocationPosition, GeolocationPositionError } from '../shared/models/
   providedIn: 'root'
 })
 export class DashboardService {
+  private geoLocationStatusChanged = new Subject<string>();
+  geoLocationStatusChanged$: Observable<string>;
+
   constructor(
     private openWeatherApiService: OpenWeatherApiService,
-    private geolocationApiService: GeolocationApiService
-  ) { }
+    private geolocationApiService: GeolocationApiService,
+    private readonly permissions: PermissionsService
+  ) {
+    this.geoLocationStatusChanged$ = this.geoLocationStatusChanged.asObservable();
+
+    this.permissions.state('geolocation').subscribe(geolocationStatus => {
+      this.geoLocationStatusChanged.next(geolocationStatus);
+    });
+  }
 
   getCurrentWeather(unit?: UnitsMeasurement): Observable<OpenWeatherApiResponse> {
     const geoLocationPosition = this.getGeolocationPosition();
@@ -54,7 +66,7 @@ export class DashboardService {
   }
 
   async setGeolocationPosition(): Promise<boolean> {
-    return await this.geolocationApiService.getLocation();
+    return await this.geolocationApiService.setLocation();
   }
 
   private getGeolocationPosition(): GeolocationPosition {

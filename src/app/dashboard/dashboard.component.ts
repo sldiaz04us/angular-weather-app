@@ -51,6 +51,19 @@ export class DashboardComponent implements OnInit {
       }
     });
 
+    this.dashboardService.geoLocationStatusChanged$
+      .subscribe(geolocationStatus => {
+        if (geolocationStatus === 'granted') {
+          this.locationGranted();
+        } else if (geolocationStatus === 'denied') {
+          this.currentWeather = undefined;
+          this.airPollutionIndex = undefined;
+          this.emptyState = this.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
+        } else { // geolocationStatus === prompt
+          this.emptyState = this.getEmptyState(EmptyStateTypes.GPS);
+        }
+      });
+
     this.setUnitAndTempSymbols(UnitsMeasurement.imperial);
   }
 
@@ -59,7 +72,7 @@ export class DashboardComponent implements OnInit {
     this.setAirPollutionData(); // just to update the air pollution data, this call is not needed
   }
 
-  allowLocation(): void {
+  locationGranted(): void {
     this.dashboardService.setGeolocationPosition().then((isPositionEnabled) => {
       if (isPositionEnabled) {
         this.setWeatherData(this.unitMeasurement);
@@ -68,6 +81,10 @@ export class DashboardComponent implements OnInit {
         this.emptyState = this.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
       }
     });
+  }
+
+  allowLocation(): void {
+    this.dashboardService.setGeolocationPosition();
   }
 
   private setWeatherData(unitMeasurement: UnitsMeasurement): void {

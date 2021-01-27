@@ -35,14 +35,14 @@ export class GeolocationApiService {
       this.agreementDialogService.dialogReference.afterClosed()
         .subscribe(async (agree: boolean) => {
           if (agree) {
-            await this.getLocation();
+            await this.setLocation();
           }
           resolve(true);
         });
     });
   }
 
-  getLocation(): Promise<boolean> {
+  setLocation(): Promise<boolean> {
     return new Promise(resolve => {
       this.geolocation$.pipe(
         take(1),
