@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { Current, Daily } from '../openweather-api.model';
+import { Current, Daily } from '../../core/api/openweather-api.model';
 
 @Component({
   selector: 'dashboard-bottom-section',

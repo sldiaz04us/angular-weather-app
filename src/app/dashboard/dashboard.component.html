@@ -1,4 +1,4 @@
-<main id="main-content">
+<main *ngIf="currentWeather" id="main-content">
   <dashboard-top-section
     [current]="currentWeather"
     [tempSymbol]="temperatureSymbol"
@@ -17,7 +17,27 @@
   ></dashboard-bottom-section>
 </main>
 <dashboard-aside-section
+  *ngIf="currentWeather"
   [current]="currentWeather"
   [airPollutionIndex]="airPollutionIndex"
   [unitSymbol]="unitSymbol"
 ></dashboard-aside-section>
+
+<widget-empty-state *ngIf="!currentWeather">
+  <img
+    empty-state-img
+    [src]="emptyState.imageSrc"
+    [alt]="emptyState.imageAlt"
+  />
+  <h2 empty-state-title class="large-text-semibold">{{ emptyState.title }}</h2>
+  <p empty-state-content class="normal-text">{{ emptyState.content }}</p>
+  <button
+    *ngIf="emptyState.buttonText"
+    empty-state-action
+    mat-stroked-button
+    color="primary"
+    (click)="allowLocation()"
+  >
+    {{ emptyState.buttonText }}
+  </button>
+</widget-empty-state>

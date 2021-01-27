@@ -1,11 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { map } from 'rxjs/operators';
-
-import { Current, Daily, OpenWeatherApiResponse } from './openweather-api.model';
 import { DashboardService } from './dashboard.service';
+import {
+  Current,
+  Daily,
+  OpenWeatherApiResponse,
+  AirPollutionApiResponse
+} from '../core/api/openweather-api.model';
 import { UnitsMeasurement } from '../shared/enums/units-measurement.enum';
+import { EmptyState } from '../shared/models/empty-state.model';
+import { emptyStates } from '../shared/constants/empty-states.assets';
+import { EmptyStateTypes } from '../shared/enums/empty-states.enum';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,6 +26,7 @@ export class DashboardComponent implements OnInit {
   unitSymbol: string;
   temperatureSymbol: string;
   unitMeasurement: UnitsMeasurement;
+  emptyState: EmptyState;
 
   constructor(
     private dashboardService: DashboardService,
@@ -27,18 +34,23 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-  /* Using the DashboardResolver */
-    this.route.data.pipe(
-      map(data => {
-        return data.openWeatherApiResponse as OpenWeatherApiResponse;
-      })
-    ).subscribe(weather => {
-      this.currentWeather = weather.current;
-      this.hourlyWeather = weather.hourly.slice(0, 8);
-      this.dailyWeather = weather.daily;
+    /* Using Resolvers */
+    this.route.data.subscribe((data: {
+      weather: OpenWeatherApiResponse,
+      airPollution: AirPollutionApiResponse
+    }) => {
+      if (data.weather) {
+        this.currentWeather = data.weather.current;
+        this.hourlyWeather = data.weather.hourly.slice(0, 8);
+        this.dailyWeather = data.weather.daily;
+        this.airPollutionIndex = data.airPollution.list[0].main.aqi;
+      } else if (this.dashboardService.getGeolocationPositionError()) {
+        this.emptyState = this.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
+      } else {
+        this.emptyState = this.getEmptyState(EmptyStateTypes.GPS);
+      }
     });
 
-    this.setAirPollutionData();
     this.setUnitAndTempSymbols(UnitsMeasurement.imperial);
   }
 
@@ -47,22 +59,30 @@ export class DashboardComponent implements OnInit {
     this.setAirPollutionData(); // just to update the air pollution data, this call is not needed
   }
 
+  allowLocation(): void {
+    this.dashboardService.setGeolocationPosition().then((isPositionEnabled) => {
+      if (isPositionEnabled) {
+        this.setWeatherData(this.unitMeasurement);
+        this.setAirPollutionData();
+      } else {
+        this.emptyState = this.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
+      }
+    });
+  }
 
   private setWeatherData(unitMeasurement: UnitsMeasurement): void {
-    this.dashboardService.getCurrentWeather(unitMeasurement)
-      .subscribe(weather => {
-        this.currentWeather = weather.current;
-        this.hourlyWeather = weather.hourly.slice(0, 8); // get only 8 hours forecast
-        this.dailyWeather = weather.daily;
-        this.setUnitAndTempSymbols(unitMeasurement);
-      });
+    this.dashboardService.getCurrentWeather(unitMeasurement).subscribe(weather => {
+      this.currentWeather = weather.current;
+      this.hourlyWeather = weather.hourly.slice(0, 8); // get only 8 hours forecast
+      this.dailyWeather = weather.daily;
+      this.setUnitAndTempSymbols(unitMeasurement);
+    });
   }
 
   private setAirPollutionData(): void {
-    this.dashboardService.getAirPollution()
-      .subscribe(airPollution => {
-        this.airPollutionIndex = airPollution.list[0].main.aqi;
-      });
+    this.dashboardService.getAirPollution().subscribe(airPollution => {
+      this.airPollutionIndex = airPollution.list[0].main.aqi;
+    });
   }
 
   private setUnitAndTempSymbols(unit: UnitsMeasurement): void {
@@ -75,5 +95,10 @@ export class DashboardComponent implements OnInit {
       this.temperatureSymbol = '°F';
     }
   }
+
+  private getEmptyState(emptyStateType: EmptyStateTypes): EmptyState {
+    return emptyStates.find(state => state.id === emptyStateType);
+  }
+
 
 }

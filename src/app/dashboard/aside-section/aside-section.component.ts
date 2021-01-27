@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { Current } from '../openweather-api.model';
+import { Current } from '../../core/api/openweather-api.model';
 
 @Component({
   selector: 'dashboard-aside-section',

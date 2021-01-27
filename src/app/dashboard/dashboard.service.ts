@@ -1,63 +1,63 @@
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
-import { take, switchMap } from 'rxjs/operators';
-
-import { GeolocationService } from '@ng-web-apis/geolocation';
+import { Observable, of } from 'rxjs';
 
 import { OpenWeatherApiService } from '../core/api/openweather-api.service';
 import { UnitsMeasurement } from '../shared/enums/units-measurement.enum';
-import { OpenWeatherApiResponse, AirPollutionApiResponse } from './openweather-api.model';
-
-
-interface GeolocationPosition {
-  coords: GeolocationCoordinates;
-  timestamp: number;
-}
-interface GeolocationCoordinates {
-  accuracy: number;
-  altitude: number;
-  altitudeAccuracy: number;
-  heading: number;
-  latitude: number;
-  longitude: number;
-  speed: number;
-}
+import {
+  OpenWeatherApiResponse,
+  AirPollutionApiResponse
+} from '../core/api/openweather-api.model';
+import { GeolocationApiService } from '../core/services/geolocation-api.service';
+import { GeolocationPosition, GeolocationPositionError } from '../shared/models/geolocation-position.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardService {
-
   constructor(
     private openWeatherApiService: OpenWeatherApiService,
-    private readonly geolocation$: GeolocationService
+    private geolocationApiService: GeolocationApiService
   ) { }
 
   getCurrentWeather(unit?: UnitsMeasurement): Observable<OpenWeatherApiResponse> {
-    return this.geolocation$.pipe(
-      take(1),
-      switchMap((position: GeolocationPosition) => {
-        return this.openWeatherApiService.getCurrentAndForecastWeather(
-          position.coords.latitude,
-          position.coords.longitude,
-          unit
-        );
-      })
-    );
-    // return this.openWeatherApiService.getStaticCurrentAndForecastWeather(unit);
+    const geoLocationPosition = this.getGeolocationPosition();
+    if (geoLocationPosition) {
+      return this.openWeatherApiService.getCurrentAndForecastWeather(
+        geoLocationPosition.coords.latitude,
+        geoLocationPosition.coords.longitude,
+        unit
+      );
+
+      // return this.openWeatherApiService.getStaticCurrentAndForecastWeather(unit);
+    }
+
+    return of(undefined);
   }
 
   getAirPollution(): Observable<AirPollutionApiResponse> {
-    return this.geolocation$.pipe(
-      take(1),
-      switchMap((position: GeolocationPosition) => {
-        return this.openWeatherApiService.getAirPollutionInfo(
-          position.coords.latitude,
-          position.coords.longitude,
-        );
-      })
-    );
-    // return this.openWeatherApiService.getStaticAirPollutionInfo();
+    const geoLocationPosition = this.getGeolocationPosition();
+    if (geoLocationPosition) {
+      return this.openWeatherApiService.getAirPollutionInfo(
+        geoLocationPosition.coords.latitude,
+        geoLocationPosition.coords.longitude,
+      );
+
+      // return this.openWeatherApiService.getStaticAirPollutionInfo();
+    }
+
+    return of(undefined);
+  }
+
+  getGeolocationPositionError(): GeolocationPositionError {
+    return this.geolocationApiService.getGeolocationPositionError();
+  }
+
+  async setGeolocationPosition(): Promise<boolean> {
+    return await this.geolocationApiService.getLocation();
+  }
+
+  private getGeolocationPosition(): GeolocationPosition {
+    return this.geolocationApiService.getGeolocationPosition();
   }
 }

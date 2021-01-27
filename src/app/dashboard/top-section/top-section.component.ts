@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
-import { Current } from '../openweather-api.model';
+import { Current } from '../../core/api/openweather-api.model';
 import { UnitsMeasurement } from '../../shared/enums/units-measurement.enum';
 
 @Component({

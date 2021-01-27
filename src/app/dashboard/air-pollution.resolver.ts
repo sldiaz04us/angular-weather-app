@@ -7,16 +7,16 @@ import {
 
 import { Observable } from 'rxjs';
 
-import { OpenWeatherApiResponse } from './openweather-api.model';
+import { AirPollutionApiResponse } from '../core/api/openweather-api.model';
 import { DashboardService } from './dashboard.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DashboardResolver implements Resolve<OpenWeatherApiResponse> {
+export class AirPollutionResolver implements Resolve<AirPollutionApiResponse> {
   constructor(private dashboardService: DashboardService) { }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<OpenWeatherApiResponse> {
-    return this.dashboardService.getCurrentWeather();
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<AirPollutionApiResponse> {
+    return this.dashboardService.getAirPollution();
   }
 }

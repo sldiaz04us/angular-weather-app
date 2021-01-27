@@ -1,4 +1,4 @@
-import { OpenWeatherApiResponse, AirPollutionApiResponse } from '../../dashboard/openweather-api.model';
+import { OpenWeatherApiResponse, AirPollutionApiResponse } from './openweather-api.model';
 
 
 export const staticWeatherDataInFahrenheit: OpenWeatherApiResponse = {

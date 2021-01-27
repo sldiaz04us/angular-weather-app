@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from '@angular/material/button';
 
 import { DashboardComponent } from './dashboard.component';
 import { TopSectionComponent } from './top-section/top-section.component';
@@ -10,13 +11,17 @@ import { MiddleSectionComponent } from './middle-section/middle-section.componen
 import { BottomSectionComponent } from './bottom-section/bottom-section.component';
 import { AsideSectionComponent } from './aside-section/aside-section.component';
 import { SharedModule } from '../shared/shared.module';
-import { DashboardResolver } from './dashboard.resolver';
+import { WeatherResolver } from './weather.resolver';
+import { AirPollutionResolver } from './air-pollution.resolver';
 
 const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
-    resolve: { openWeatherApiResponse: DashboardResolver } // uncomment only to use with OpenWeather API
+    resolve: {
+      weather: WeatherResolver,
+      airPollution: AirPollutionResolver
+    }
   }
 ];
 
@@ -26,6 +31,7 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     MatTabsModule,
+    MatButtonModule,
     SharedModule
   ]
 })

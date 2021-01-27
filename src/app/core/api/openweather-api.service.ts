@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 
-import { OpenWeatherApiResponse, AirPollutionApiResponse } from '../../dashboard/openweather-api.model';
+import { OpenWeatherApiResponse, AirPollutionApiResponse } from './openweather-api.model';
 import { UnitsMeasurement } from '../../shared/enums/units-measurement.enum';
 import {
   staticWeatherDataInCelsius,
