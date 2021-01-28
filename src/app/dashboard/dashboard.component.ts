@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+
+import { Subscription } from 'rxjs';
 
 import { DashboardService } from './dashboard.service';
 import {
@@ -18,7 +20,7 @@ import { EmptyStateTypes } from '../shared/enums/empty-states.enum';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   currentWeather: Current;
   hourlyWeather: Current[];
   dailyWeather: Daily[];
@@ -27,6 +29,8 @@ export class DashboardComponent implements OnInit {
   temperatureSymbol: string;
   unitMeasurement: UnitsMeasurement;
   emptyState: EmptyState;
+
+  private geolocationPermissionSubs: Subscription;
 
   constructor(
     private dashboardService: DashboardService,
@@ -44,14 +48,14 @@ export class DashboardComponent implements OnInit {
         this.hourlyWeather = data.weather.hourly.slice(0, 8);
         this.dailyWeather = data.weather.daily;
         this.airPollutionIndex = data.airPollution.list[0].main.aqi;
-      } else if (this.dashboardService.getGeolocationPositionError()) {
+      } else if (this.dashboardService.getGeolocationStatus() === 'denied') {
         this.emptyState = this.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
       } else {
         this.emptyState = this.getEmptyState(EmptyStateTypes.GPS);
       }
     });
 
-    this.dashboardService.geoLocationStatusChanged$
+    this.geolocationPermissionSubs = this.dashboardService.geolocationStatusChanged$
       .subscribe(geolocationStatus => {
         if (geolocationStatus === 'granted') {
           this.locationGranted();
@@ -85,6 +89,12 @@ export class DashboardComponent implements OnInit {
 
   allowLocation(): void {
     this.dashboardService.setGeolocationPosition();
+  }
+
+  ngOnDestroy(): void {
+    if (this.geolocationPermissionSubs) {
+      this.geolocationPermissionSubs.unsubscribe();
+    }
   }
 
   private setWeatherData(unitMeasurement: UnitsMeasurement): void {

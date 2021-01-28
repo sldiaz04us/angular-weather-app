@@ -17,24 +17,26 @@ import { GeolocationPosition, GeolocationPositionError } from '../shared/models/
   providedIn: 'root'
 })
 export class DashboardService {
-  private geoLocationStatusChanged = new Subject<string>();
-  geoLocationStatusChanged$: Observable<string>;
+  private geolocationPermissionStatus: string;
+  private geolocationStatusSubject = new Subject<string>();
+  geolocationStatusChanged$: Observable<string>;
 
   constructor(
     private openWeatherApiService: OpenWeatherApiService,
     private geolocationApiService: GeolocationApiService,
     private readonly permissions: PermissionsService
   ) {
-    this.geoLocationStatusChanged$ = this.geoLocationStatusChanged.asObservable();
+    this.geolocationStatusChanged$ = this.geolocationStatusSubject.asObservable();
 
     this.permissions.state('geolocation').subscribe(geolocationStatus => {
-      this.geoLocationStatusChanged.next(geolocationStatus);
+      this.geolocationPermissionStatus = geolocationStatus;
+      this.geolocationStatusSubject.next(geolocationStatus);
     });
   }
 
   getCurrentWeather(unit?: UnitsMeasurement): Observable<OpenWeatherApiResponse> {
     const geoLocationPosition = this.getGeolocationPosition();
-    if (geoLocationPosition) {
+    if (geoLocationPosition && this.geolocationPermissionStatus === 'granted') {
       return this.openWeatherApiService.getCurrentAndForecastWeather(
         geoLocationPosition.coords.latitude,
         geoLocationPosition.coords.longitude,
@@ -49,7 +51,7 @@ export class DashboardService {
 
   getAirPollution(): Observable<AirPollutionApiResponse> {
     const geoLocationPosition = this.getGeolocationPosition();
-    if (geoLocationPosition) {
+    if (geoLocationPosition && this.geolocationPermissionStatus === 'granted') {
       return this.openWeatherApiService.getAirPollutionInfo(
         geoLocationPosition.coords.latitude,
         geoLocationPosition.coords.longitude,
@@ -69,7 +71,12 @@ export class DashboardService {
     return await this.geolocationApiService.setLocation();
   }
 
+  getGeolocationStatus(): string {
+    return this.geolocationPermissionStatus;
+  }
+
   private getGeolocationPosition(): GeolocationPosition {
     return this.geolocationApiService.getGeolocationPosition();
   }
+
 }
