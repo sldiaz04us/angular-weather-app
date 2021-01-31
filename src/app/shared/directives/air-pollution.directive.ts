@@ -19,6 +19,10 @@ export class AirPollutionDirective implements OnChanges {
   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.airPollutionIndex.currentValue !== undefined) {
+      if (!changes.airPollutionIndex.firstChange) {
+        this.renderer.removeClass(this.el.nativeElement,
+          this.airPollution[changes.airPollutionIndex.previousValue - 1]);
+      }
       this.renderer.addClass(this.el.nativeElement,
         this.airPollution[changes.airPollutionIndex.currentValue - 1]);
     }
