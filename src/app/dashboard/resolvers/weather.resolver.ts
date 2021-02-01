@@ -7,8 +7,8 @@ import {
 
 import { Observable } from 'rxjs';
 
-import { DashboardService } from './dashboard.service';
-import { OpenWeatherApiResponse } from '../core/api/openweather-api.model';
+import { DashboardService } from '../dashboard.service';
+import { OpenWeatherApiResponse } from '../../core/api/openweather-api.model';
 
 @Injectable({
   providedIn: 'root'

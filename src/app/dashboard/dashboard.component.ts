@@ -1,19 +1,21 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 
 import { DashboardService } from './dashboard.service';
 import {
   Current,
   Daily,
   OpenWeatherApiResponse,
-  AirPollutionApiResponse
+  AirPollutionApiResponse,
+  ReverseGeocoderApiResponse
 } from '../core/api/openweather-api.model';
 import { UnitsMeasurement } from '../shared/enums/units-measurement.enum';
 import { EmptyState } from '../shared/models/empty-state.model';
 import { emptyStates } from '../shared/constants/empty-states.assets';
 import { EmptyStateTypes } from '../shared/enums/empty-states.enum';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,12 +27,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   hourlyWeather: Current[];
   dailyWeather: Daily[];
   airPollutionIndex: number;
+  locationName: string;
   unitSymbol: string;
   temperatureSymbol: string;
   unitMeasurement: UnitsMeasurement;
   emptyState: EmptyState;
 
-  private geolocationPermissionSubs: Subscription;
+  private subsNotifier = new Subject();
 
   constructor(
     private dashboardService: DashboardService,
@@ -41,13 +44,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
     /* Using Resolvers */
     this.route.data.subscribe((data: {
       weather: OpenWeatherApiResponse,
-      airPollution: AirPollutionApiResponse
+      airPollution: AirPollutionApiResponse,
+      locationName: ReverseGeocoderApiResponse[]
     }) => {
       if (data.weather) {
         this.currentWeather = data.weather.current;
         this.hourlyWeather = data.weather.hourly.slice(0, 8);
         this.dailyWeather = data.weather.daily;
         this.airPollutionIndex = data.airPollution.list[0].main.aqi;
+
+        this.setLocationName();
       } else if (this.dashboardService.getGeolocationStatus() === 'denied') {
         this.emptyState = this.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
       } else {
@@ -55,18 +61,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.geolocationPermissionSubs = this.dashboardService.geolocationStatusChanged$
-      .subscribe(geolocationStatus => {
-        if (geolocationStatus === 'granted') {
-          this.locationGranted();
-        } else if (geolocationStatus === 'denied') {
-          this.currentWeather = undefined;
-          this.airPollutionIndex = undefined;
-          this.emptyState = this.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
-        } else { // geolocationStatus === prompt
-          this.emptyState = this.getEmptyState(EmptyStateTypes.GPS);
-        }
-      });
+    this.dashboardService.geolocationStatusChanged$.pipe(takeUntil(this.subsNotifier)).subscribe(geolocationStatus => {
+      if (geolocationStatus === 'granted') {
+        this.locationGranted();
+      } else if (geolocationStatus === 'denied') {
+        this.currentWeather = undefined;
+        this.airPollutionIndex = undefined;
+        this.emptyState = this.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
+      } else { // geolocationStatus === prompt
+        this.emptyState = this.getEmptyState(EmptyStateTypes.GPS);
+      }
+    });
+
+    this.dashboardService.geolocationPositionChanged$.pipe(takeUntil(this.subsNotifier)).subscribe(() => {
+      this.setWeatherData(this.unitMeasurement);
+      this.setAirPollutionData();
+      this.setLocationName();
+    });
 
     this.setUnitAndTempSymbols(UnitsMeasurement.imperial);
   }
@@ -76,25 +87,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.setAirPollutionData(); // just to update the air pollution data, this call is not needed
   }
 
+  allowLocation(): void {
+    this.locationGranted();
+  }
+
   locationGranted(): void {
     this.dashboardService.setGeolocationPosition().then((isPositionEnabled) => {
       if (isPositionEnabled) {
         this.setWeatherData(this.unitMeasurement);
         this.setAirPollutionData();
+        this.setLocationName();
       } else {
         this.emptyState = this.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
       }
     });
   }
 
-  allowLocation(): void {
-    this.dashboardService.setGeolocationPosition();
-  }
-
   ngOnDestroy(): void {
-    if (this.geolocationPermissionSubs) {
-      this.geolocationPermissionSubs.unsubscribe();
-    }
+    this.subsNotifier.next();
+    this.subsNotifier.complete();
   }
 
   private setWeatherData(unitMeasurement: UnitsMeasurement): void {
@@ -112,6 +123,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
+  private setLocationName(): void {
+    this.locationName = this.dashboardService.getGeoLocationName();
+    if (!this.locationName) {
+      this.dashboardService.getLocationNameWithOpenWeatherApi().subscribe(reverseGeo => {
+        this.locationName = this.getFullLocationName(reverseGeo);
+      });
+    }
+  }
+  private getFullLocationName(reverseGeo: ReverseGeocoderApiResponse[]): string {
+    const locationNameResp = reverseGeo[0];
+    return locationNameResp && locationNameResp.state ? `${locationNameResp?.name}, ${locationNameResp?.state}` : `${locationNameResp?.name}`;
+  }
+
   private setUnitAndTempSymbols(unit: UnitsMeasurement): void {
     this.unitMeasurement = unit;
     if (unit === UnitsMeasurement.metric) {
@@ -126,6 +150,4 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private getEmptyState(emptyStateType: EmptyStateTypes): EmptyState {
     return emptyStates.find(state => state.id === emptyStateType);
   }
-
-
 }

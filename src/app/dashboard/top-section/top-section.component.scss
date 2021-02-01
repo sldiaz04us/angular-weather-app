@@ -1,7 +1,7 @@
 .top {
   display: grid;
   grid-area: main-top;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
 
   .temp-control {
     place-self: start end;

@@ -29,8 +29,8 @@
         >
           <div class="main">
             <div class="date">
-              <div class="day medium-text-semibold">
-                {{ isFirst ? "Today" : (daily.dt | customDate: "MMM d") }}
+              <div class="day normal-text-bold">
+                {{ isFirst ? "Today" : (daily.dt | customDate: "EEE, MMM d") }}
               </div>
               <div class="desc small-text-medium">
                 {{ daily.weather[0].description | titlecase }}

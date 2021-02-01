@@ -11,8 +11,9 @@ import { MiddleSectionComponent } from './middle-section/middle-section.componen
 import { BottomSectionComponent } from './bottom-section/bottom-section.component';
 import { AsideSectionComponent } from './aside-section/aside-section.component';
 import { SharedModule } from '../shared/shared.module';
-import { WeatherResolver } from './weather.resolver';
-import { AirPollutionResolver } from './air-pollution.resolver';
+import { WeatherResolver } from './resolvers/weather.resolver';
+import { AirPollutionResolver } from './resolvers/air-pollution.resolver';
+import { ReverseGeocoderResolver } from './resolvers/reverse-geocoder.resolver';
 
 const routes: Routes = [
   {
@@ -20,7 +21,8 @@ const routes: Routes = [
     component: DashboardComponent,
     resolve: {
       weather: WeatherResolver,
-      airPollution: AirPollutionResolver
+      airPollution: AirPollutionResolver,
+      locationName: ReverseGeocoderResolver
     }
   }
 ];

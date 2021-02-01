@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 
-import { OpenWeatherApiResponse, AirPollutionApiResponse } from './openweather-api.model';
+import { OpenWeatherApiResponse, AirPollutionApiResponse, ReverseGeocoderApiResponse } from './openweather-api.model';
 import { UnitsMeasurement } from '../../shared/enums/units-measurement.enum';
 import {
   staticWeatherDataInCelsius,
@@ -20,6 +20,7 @@ export class OpenWeatherApiService {
 
   private currentWeatherApiUrl = 'https://api.openweathermap.org/data/2.5/onecall?';
   private airPollutionApiUrl = 'http://api.openweathermap.org/data/2.5/air_pollution?';
+  private reverseGeocoderUrl = 'http://api.openweathermap.org/geo/1.0/reverse?';
 
   constructor(private http: HttpClient) { }
 
@@ -39,5 +40,9 @@ export class OpenWeatherApiService {
   }
   getStaticAirPollutionInfo(): Observable<AirPollutionApiResponse> {
     return of(staticAirPollutionData);
+  }
+
+  getLocationNameByCoords(lat: number, lon: number): Observable<ReverseGeocoderApiResponse[]> {
+    return this.http.get<ReverseGeocoderApiResponse[]>(`${this.reverseGeocoderUrl}lat=${lat}&lon=${lon}&appid=${environment.openWeatherApiKey}`);
   }
 }

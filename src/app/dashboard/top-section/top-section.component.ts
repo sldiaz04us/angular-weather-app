@@ -10,6 +10,7 @@ import { UnitsMeasurement } from '../../shared/enums/units-measurement.enum';
 })
 export class TopSectionComponent implements OnInit {
   @Input() current: Current;
+  @Input() locationName: string;
   @Input() tempSymbol: string;
   @Input() unit: UnitsMeasurement;
   @Output() temperatureChanged = new EventEmitter<UnitsMeasurement>();

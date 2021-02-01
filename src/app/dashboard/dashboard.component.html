@@ -1,6 +1,7 @@
 <main *ngIf="currentWeather" id="main-content">
   <dashboard-top-section
     [current]="currentWeather"
+    [locationName]="locationName"
     [tempSymbol]="temperatureSymbol"
     [unit]="unitMeasurement"
     (temperatureChanged)="onTempChanged($event)"
