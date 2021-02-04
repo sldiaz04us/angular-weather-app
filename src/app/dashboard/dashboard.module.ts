@@ -22,7 +22,7 @@ const routes: Routes = [
     resolve: {
       weather: WeatherResolver,
       airPollution: AirPollutionResolver,
-      locationName: ReverseGeocoderResolver
+      geolocationName: ReverseGeocoderResolver
     }
   }
 ];

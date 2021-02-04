@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 
 import { PermissionsService } from '@ng-web-apis/permissions';
 
 import { Observable, of, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { OpenWeatherApiService } from '../core/api/openweather-api.service';
 import { UnitsMeasurement } from '../shared/enums/units-measurement.enum';
@@ -17,14 +18,14 @@ import { GeolocationPosition, GeolocationPositionError } from '../shared/models/
 @Injectable({
   providedIn: 'root'
 })
-export class DashboardService {
-  private geolocationPermissionStatus: string;
-
+export class DashboardService implements OnDestroy {
   private geolocationStatusSubject = new Subject<string>();
   geolocationStatusChanged$: Observable<string>;
 
   private geolocationPositionSubject = new Subject<void>();
   geolocationPositionChanged$: Observable<void>;
+
+  private subsNotifier = new Subject();
 
   constructor(
     private openWeatherApiService: OpenWeatherApiService,
@@ -34,10 +35,11 @@ export class DashboardService {
     this.geolocationStatusChanged$ = this.geolocationStatusSubject.asObservable();
     this.geolocationPositionChanged$ = this.geolocationPositionSubject.asObservable();
 
-    this.permissions.state('geolocation').subscribe(geolocationStatus => {
-      this.geolocationPermissionStatus = geolocationStatus;
-      this.geolocationStatusSubject.next(geolocationStatus);
-    });
+    this.permissions.state('geolocation').pipe(takeUntil(this.subsNotifier))
+      .subscribe(geolocationStatus => {
+        console.log('GeolocationStatus:', geolocationStatus);
+        this.geolocationStatusSubject.next(geolocationStatus);
+      });
   }
 
   getCurrentWeather(unit?: UnitsMeasurement): Observable<OpenWeatherApiResponse> {
@@ -69,7 +71,7 @@ export class DashboardService {
     return of(undefined);
   }
 
-  getLocationNameWithOpenWeatherApi(): Observable<ReverseGeocoderApiResponse[]> {
+  getGeolocationNameWithOpenWeatherApi(): Observable<ReverseGeocoderApiResponse[]> {
     const geoLocationPosition = this.getGeolocationPosition();
     if (geoLocationPosition) {
       return this.openWeatherApiService.getLocationNameByCoords(
@@ -81,19 +83,26 @@ export class DashboardService {
     return of(undefined);
   }
 
-  getGeoLocationName(): string {
-    return this.geolocationApiService.getGeoLocationName();
+  getGeolocationName(): string {
+    return this.geolocationApiService.getGeolocationName();
   }
-  setGeoLocationName(locationName: string): void {
-    this.geolocationApiService.setGeoLocationName(locationName);
+  setGeolocationName(locationName: string): void {
+    this.geolocationApiService.setGeolocationName(locationName);
   }
 
   getGeolocationPositionError(): GeolocationPositionError {
     return this.geolocationApiService.getGeolocationPositionError();
   }
 
-  async setGeolocationPosition(): Promise<boolean> {
-    return await this.geolocationApiService.setLocation();
+  requestGeolocation(): void {
+    this.geolocationApiService.requestGeolocation();
+  }
+
+  async geoLocationGranted(): Promise<boolean> {
+    return await this.geolocationApiService.setGeolocation();
+  }
+  geolocationDenied(): void {
+    this.geolocationApiService.geolocationDenied();
   }
 
   updateGeolocationPosition(lat: number, lng: number): void {
@@ -101,8 +110,13 @@ export class DashboardService {
     this.geolocationPositionSubject.next();
   }
 
-  getGeolocationStatus(): string {
-    return this.geolocationPermissionStatus;
+  getGeolocationAccess(): boolean {
+    return this.geolocationApiService.getGeolocationAccess();
+  }
+
+  ngOnDestroy(): void {
+    this.subsNotifier.next();
+    this.subsNotifier.complete();
   }
 
   private getGeolocationPosition(): GeolocationPosition {

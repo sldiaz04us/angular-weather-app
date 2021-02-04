@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { GeolocationApiService } from './core/services/geolocation-api.service';
 import { AgreementDialogService } from './core/dialog/agreement-dialog.service';
+import { WebStorageApiService } from './core/services/web-storage-api.service';
 
 export function geoLocationFactory(geoLocationService: GeolocationApiService
 ): () => Promise<boolean> {
@@ -28,7 +29,7 @@ export function geoLocationFactory(geoLocationService: GeolocationApiService
     {
       provide: APP_INITIALIZER,
       useFactory: geoLocationFactory,
-      deps: [GeolocationApiService, AgreementDialogService, GeolocationService],
+      deps: [GeolocationApiService, WebStorageApiService, AgreementDialogService, GeolocationService],
       multi: true
     }
   ],

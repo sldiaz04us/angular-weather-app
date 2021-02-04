@@ -17,6 +17,6 @@ export class ReverseGeocoderResolver implements Resolve<ReverseGeocoderApiRespon
   constructor(private dashboardService: DashboardService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ReverseGeocoderApiResponse[]> {
-    return this.dashboardService.getLocationNameWithOpenWeatherApi();
+    return this.dashboardService.getGeolocationNameWithOpenWeatherApi();
   }
 }

@@ -1,7 +1,7 @@
 <main *ngIf="currentWeather" id="main-content">
   <dashboard-top-section
     [current]="currentWeather"
-    [locationName]="locationName"
+    [geolocationName]="geolocationName"
     [tempSymbol]="temperatureSymbol"
     [unit]="unitMeasurement"
     (temperatureChanged)="onTempChanged($event)"
@@ -27,18 +27,18 @@
 <widget-empty-state *ngIf="!currentWeather">
   <img
     empty-state-img
-    [src]="emptyState.imageSrc"
-    [alt]="emptyState.imageAlt"
+    [src]="geolocationState.imageSrc"
+    [alt]="geolocationState.imageAlt"
   />
-  <h2 empty-state-title class="large-text-semibold">{{ emptyState.title }}</h2>
-  <p empty-state-content class="normal-text">{{ emptyState.content }}</p>
+  <h2 empty-state-title class="large-text-semibold">{{ geolocationState.title }}</h2>
+  <p empty-state-content class="normal-text">{{ geolocationState.content }}</p>
   <button
-    *ngIf="emptyState.buttonText"
+    *ngIf="geolocationState.buttonText"
     empty-state-action
     mat-stroked-button
     color="primary"
-    (click)="allowLocation()"
+    (click)="allowGeolocation()"
   >
-    {{ emptyState.buttonText }}
+    {{ geolocationState.buttonText }}
   </button>
 </widget-empty-state>

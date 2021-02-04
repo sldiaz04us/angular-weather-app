@@ -9,7 +9,11 @@
       [formControl]="searchControl"
       [matAutocomplete]="auto"
     />
-    <mat-icon matSuffix>location_searching</mat-icon>
+    <button (click)="enableLocation()" mat-icon-button matSuffix>
+      <mat-icon>{{
+        isLocationEnable ? "gps_fixed" : "gps_not_fixed"
+      }}</mat-icon>
+    </button>
     <mat-autocomplete
       #auto="matAutocomplete"
       [displayWith]="displayFn"
