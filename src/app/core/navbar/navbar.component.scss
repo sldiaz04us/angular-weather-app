@@ -2,7 +2,7 @@
   position: fixed;
   bottom: 0; //
   width: 100vw; //
-  height: 5rem; //
+  height: 4rem; //
   background-color: var(--light-blue);
   transition: width 200ms ease;
   overflow: auto;
@@ -53,11 +53,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 5rem;
+  height: 4rem;
   color: var(--dashboard-dark);
   text-decoration: none;
   filter: grayscale(100%) opacity(0.7);
-  transition: var(--transition-speed);
+  transition: color var(--transition-speed);
 
   &:hover {
     filter: grayscale(0%) opacity(1);
@@ -69,6 +69,7 @@
     width: 2rem;
     min-width: 2rem;
     margin: 0 1.5rem;
+    cursor: pointer;
   }
 
   .link-text {
@@ -85,7 +86,7 @@
 }
 .fa-primary,
 .fa-secondary {
-  transition: var(--transition-speed);
+  transition: color var(--transition-speed);
 }
 
 /* large screens */
@@ -95,7 +96,7 @@
     width: 5rem;
     height: 100vh;
 
-    &:hover {
+    &.open {
       width: 16rem;
 
       .link-text {
@@ -123,5 +124,6 @@
 
   .nav-link {
     justify-content: flex-start;
+    height: 5rem;
   }
 }

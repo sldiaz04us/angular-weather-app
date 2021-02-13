@@ -51,31 +51,26 @@
 
       .low,
       .good {
-        color: #006700;
         border-color: #afcfaf;
         background-color: #bfd9bf;
       }
       .uv-moderate,
       .fair {
-        color: var(--vivid-yellow);
         border-color: var(--yellow);
         background-color: var(--light-yellow);
       }
       .high,
       .air-moderate {
-        color: #b36200;
         border-color: #ffb733;
         background-color: #ffc04d;
       }
       .very-high,
       .poor {
-        color: #bf1414;
         border-color: #ec4d4d;
         background-color: #ef6464;
       }
       .extreme,
       .very-poor {
-        color: #8c248c;
         border-color: #d55bd5;
         background-color: #da70da;
       }
@@ -86,6 +81,7 @@
     }
 
     .chip {
+      color: var(--dashboard-dark);
       border-radius: 15px;
       padding: 3px 15px;
     }
