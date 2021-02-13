@@ -1,66 +1,97 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 
 import { GeolocationService } from '@ng-web-apis/geolocation';
+import { PermissionsService } from '@ng-web-apis/permissions';
 
-import { take } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 
 import { GeolocationPosition, GeolocationPositionError } from 'src/app/shared/models/geolocation-position.model';
 import { AgreementDialogService } from '../dialog/agreement-dialog.service';
 import { ErrorDialogService } from '../dialog/error-dialog.service';
 import { WebStorageApiService } from './web-storage-api.service';
+import { OpenWeatherApiService } from '../api/openweather-api.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GeolocationApiService {
-  private geolocation: GeolocationPosition;
-  private geolocationError: GeolocationPositionError;
+export class GeolocationApiService implements OnDestroy {
+  private geolocationPosition: GeolocationPosition;
+  private geolocationStatus: string;
   private geolocationName: string;
-  private geolocationAccess: boolean;
 
   private geocoder: google.maps.Geocoder;
+
+  private geolocationStatusSubject = new Subject<string>();
+  geolocationStatusChanged$: Observable<string>;
+
+  private geolocationPositionSubject = new Subject<void>();
+  geolocationPositionChanged$: Observable<void>;
+
+  private subsNotifier = new Subject();
 
   constructor(
     private readonly agreementDialogService: AgreementDialogService,
     private readonly geolocation$: GeolocationService,
     private readonly errorDialogService: ErrorDialogService,
-    private readonly webStorageApiService: WebStorageApiService
+    private readonly webStorageApiService: WebStorageApiService,
+    private readonly permissions: PermissionsService,
+    private readonly openWeatherApiService: OpenWeatherApiService
   ) {
     this.geocoder = new google.maps.Geocoder();
+    this.geolocationPositionChanged$ = this.geolocationPositionSubject.asObservable();
+    this.geolocationStatusChanged$ = this.geolocationStatusSubject.asObservable();
+
+    this.permissions.state('geolocation').pipe(takeUntil(this.subsNotifier))
+      .subscribe(geolocationStatus => {
+        console.log('GeolocationStatus:', geolocationStatus);
+
+        this.geolocationStatus = geolocationStatus;
+        this.webStorageApiService.updateLocalStorageItem({ geolocationStatus });
+
+        this.geolocationStatusSubject.next(geolocationStatus);
+      });
   }
 
   public load(): Promise<boolean> {
     return new Promise(async (resolve) => {
       const weatherData = this.webStorageApiService.getLocalStorageItem();
-      if (weatherData && weatherData.geolocationAccess === true) {
-        await this.setGeolocation();
-        resolve(true);
-      }
-      if (weatherData && weatherData.geolocationAccess === false) {
-        this.geolocationAccess = false;
-        if (weatherData.coords) {
-          this.setGeolocationPosition(weatherData.coords.lat, weatherData.coords.lng);
-          this.geolocationName = weatherData.geolocationName;
-        }
-        resolve(true);
-      }
       if (!weatherData) {
         this.agreementDialogService.openDialog();
         this.agreementDialogService.dialogReference.afterClosed()
           .subscribe(async (agree: boolean) => {
             if (agree) {
               await this.setGeolocation();
-            } else {
-              this.geolocationAccess = false;
-              this.webStorageApiService.setLocalStorageItem({ geolocationAccess: false });
             }
             resolve(true);
           });
+      } else if (weatherData && weatherData.geolocationStatus === 'denied') {
+        if (weatherData.coords) {
+          this.setGeolocationPosition(weatherData.coords.lat, weatherData.coords.lng);
+          this.geolocationName = weatherData.geolocationName;
+        }
+        resolve(true);
+      }
+      else { // geolocationStatus === granted || prompt
+        await this.setGeolocation();
+        resolve(true);
       }
     });
   }
-  requestGeolocation(): void {
-    this.geolocation$.pipe(take(1)).subscribe();
+
+  async requestGeolocation(): Promise<void> {
+    await this.geolocation$.pipe(take(1)).toPromise()
+      .then(async location => {
+        this.saveGeolocationInLocalStorage(location);
+
+        if (this.geolocationStatus === 'granted') {
+          await this.setLocationNameWithGoogleApi();
+        }
+        this.geolocationPositionSubject.next();
+      })
+      .catch((error: GeolocationPositionError) => {
+        this.showGeolocationErrorDenied(error);
+      });
   }
 
   setGeolocation(): Promise<boolean> {
@@ -71,14 +102,7 @@ export class GeolocationApiService {
       ).subscribe(async (location: GeolocationPosition) => {
         console.log('Getting location:', location);
 
-        this.geolocation = location;
-        this.geolocationAccess = true;
-        this.webStorageApiService.updateLocalStorageItem(
-          {
-            geolocationAccess: true,
-            coords: { lat: location.coords.latitude, lng: location.coords.longitude }
-          }
-        );
+        this.saveGeolocationInLocalStorage(location);
 
         await this.setLocationNameWithGoogleApi();
         resolve(true);
@@ -86,59 +110,51 @@ export class GeolocationApiService {
         (error: GeolocationPositionError) => {
           console.log('Error getting location:', error);
 
-          this.geolocationError = error;
-          if (error.code === 1) { // code 1 - User denied Geolocation
-            this.geolocationAccess = false;
-            this.webStorageApiService.updateLocalStorageItem({ geolocationAccess: false });
-          }
-          this.errorDialogService.openDialog(error.message);
+          this.showGeolocationErrorDenied(error);
           resolve(false);
         });
     });
   }
 
   setGeolocationPosition(latitude: number, longitude: number): void {
-    this.geolocation = {
+    this.geolocationPosition = {
       coords: { latitude, longitude },
       timestamp: new Date().getTime()
     };
     this.webStorageApiService.updateLocalStorageItem(
       { coords: { lat: latitude, lng: longitude } }
     );
+    this.geolocationPositionSubject.next();
   }
   getGeolocationPosition(): GeolocationPosition {
-    return this.geolocation;
+    return this.geolocationPosition;
   }
 
-  getGeolocationName(): string {
-    return this.geolocationName;
+  getGeolocationStatus(): string {
+    return this.geolocationStatus;
   }
+
   setGeolocationName(locationName: string): void {
     this.geolocationName = locationName;
     this.webStorageApiService.updateLocalStorageItem({ geolocationName: locationName });
   }
-
-  getGeolocationPositionError(): GeolocationPositionError {
-    return this.geolocationError;
+  getGeolocationName(): string {
+    return this.geolocationName;
   }
 
-  getGeolocationAccess(): boolean {
-    return this.geolocationAccess;
-  }
-
-  geolocationDenied(): void {
-    this.geolocationAccess = false;
-    this.webStorageApiService.updateLocalStorageItem({ geolocationAccess: false });
+  ngOnDestroy(): void {
+    this.subsNotifier.next();
+    this.subsNotifier.complete();
   }
 
   private setLocationNameWithGoogleApi(): Promise<void> {
     return new Promise(resolve => {
       this.geocoder.geocode({
         location: {
-          lat: this.geolocation.coords.latitude,
-          lng: this.geolocation.coords.longitude
+          lat: this.geolocationPosition.coords.latitude,
+          lng: this.geolocationPosition.coords.longitude
         }
-      }, (geocoderResult, geocoderStatus) => {
+      }, async (geocoderResult, geocoderStatus) => {
         console.log('Geocoder status:', geocoderStatus);
         console.log('Geocoder result:', geocoderResult);
         if (geocoderStatus === google.maps.GeocoderStatus.OK) {
@@ -150,10 +166,45 @@ export class GeolocationApiService {
           if (locationNameFiltered.length > 0) {
             this.geolocationName = locationNameFiltered[0].formatted_address;
             this.webStorageApiService.updateLocalStorageItem({ geolocationName: this.geolocationName });
+          } else {
+            await this.setGeolocationNameWithOpenWeatherApi();
           }
+          resolve();
         }
-        resolve();
       });
     });
+  }
+
+  private setGeolocationNameWithOpenWeatherApi(): Promise<boolean> {
+    return new Promise(resolve => {
+      this.openWeatherApiService.getLocationNameByCoords(
+        this.geolocationPosition.coords.latitude,
+        this.geolocationPosition.coords.longitude,
+      ).subscribe(reverseGeo => {
+        const firstMatch = reverseGeo[0];
+        this.geolocationName = firstMatch && firstMatch.state ? `${firstMatch?.name}, ${firstMatch?.state}` : `${firstMatch?.name}`;
+
+        this.webStorageApiService.updateLocalStorageItem({ geolocationName: this.geolocationName });
+
+        resolve(true);
+      }, () => resolve(false));
+    });
+  }
+
+  private saveGeolocationInLocalStorage(location: GeolocationPosition): void {
+    this.geolocationPosition = location;
+    this.webStorageApiService.updateLocalStorageItem(
+      {
+        geolocationStatus: 'granted',
+        coords: { lat: location.coords.latitude, lng: location.coords.longitude }
+      }
+    );
+  }
+
+  private showGeolocationErrorDenied(error: GeolocationPositionError): void {
+    if (error.code === 1) { // code 1 - User denied Geolocation
+      this.webStorageApiService.updateLocalStorageItem({ geolocationStatus: 'denied' });
+    }
+    this.errorDialogService.openDialog(error.message);
   }
 }

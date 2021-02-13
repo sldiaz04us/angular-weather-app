@@ -9,7 +9,7 @@
       [formControl]="searchControl"
       [matAutocomplete]="auto"
     />
-    <button (click)="enableLocation()" mat-icon-button matSuffix>
+    <button mat-icon-button matSuffix aria-label="GPS icon button">
       <mat-icon>{{
         isLocationEnable ? "gps_fixed" : "gps_not_fixed"
       }}</mat-icon>
@@ -23,10 +23,18 @@
         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
       </mat-option>
       <ng-container *ngIf="!isLoading">
+        <mat-option [value]="gpsPrediction"
+          ><mat-icon [ngStyle]="{ color: 'var(--blue)' }">gps_fixed</mat-icon>
+          Your location</mat-option
+        >
+        <mat-divider></mat-divider>
         <mat-option
           *ngFor="let prediction of searchPredictions"
           [value]="prediction"
         >
+          <mat-icon [ngStyle]="{ color: 'var(--dashboard-dark)' }">{{
+            prediction.place_id ? "location_on" : "not_listed_location"
+          }}</mat-icon>
           {{ prediction.description }}
         </mat-option>
       </ng-container>

@@ -1,15 +1,23 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, NgZone, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  NgZone,
+  OnDestroy
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 import { } from 'googlemaps';
 
+import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, takeUntil, tap } from 'rxjs/operators';
 
 import { DashboardService } from '../../dashboard/dashboard.service';
 import { ErrorDialogService } from '../dialog/error-dialog.service';
-import { Subject } from 'rxjs';
 @Component({
   selector: 'app-toolbar',
   templateUrl: './toolbar.component.html',
@@ -28,6 +36,16 @@ export class ToolbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private subsNotifier = new Subject();
   isLocationEnable = false;
+
+  readonly gpsPrediction = {
+    description: 'GPS',
+    matched_substrings: undefined,
+    place_id: undefined,
+    reference: undefined,
+    structured_formatting: undefined,
+    terms: undefined,
+    types: undefined,
+  };
 
   constructor(
     private ngZone: NgZone,
@@ -62,10 +80,6 @@ export class ToolbarComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  enableLocation(): void {
-    this.dashboardService.requestGeolocation();
-  }
-
   ngOnDestroy(): void {
     this.subsNotifier.next();
     this.subsNotifier.complete();
@@ -90,7 +104,7 @@ export class ToolbarComponent implements OnInit, AfterViewInit, OnDestroy {
           description: 'No records found',
           matched_substrings: undefined,
           place_id: undefined,
-          reference: '',
+          reference: undefined,
           structured_formatting: undefined,
           terms: undefined,
           types: undefined,
@@ -100,7 +114,9 @@ export class ToolbarComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onSelectedOption(selected: MatAutocompleteSelectedEvent): void {
-    if (selected.option.value.place_id) {
+    if (selected.option.value.description === 'GPS') {
+      this.dashboardService.requestGeolocation();
+    } else if (selected.option.value.place_id) {
       this.placeDescriptionSelected = selected.option.value.description;
       const placeRequest = {
         placeId: selected.option.value.place_id,

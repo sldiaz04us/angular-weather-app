@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatDividerModule } from '@angular/material/divider';
 
 import { NavbarComponent } from './navbar/navbar.component';
 import { ToolbarComponent } from '../core/toolbar/toolbar.component';
@@ -32,7 +33,8 @@ import { DialogModule } from './dialog/dialog.module';
     MatIconModule,
     MatButtonModule,
     MatAutocompleteModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatDividerModule
   ],
   exports: [NavbarComponent, ToolbarComponent]
 })

@@ -9,8 +9,7 @@ import {
   Current,
   Daily,
   OpenWeatherApiResponse,
-  AirPollutionApiResponse,
-  ReverseGeocoderApiResponse
+  AirPollutionApiResponse
 } from '../core/api/openweather-api.model';
 import { UnitsMeasurement } from '../shared/enums/units-measurement.enum';
 import { EmptyState } from '../shared/models/empty-state.model';
@@ -44,19 +43,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
     /* Using Resolvers */
     this.route.data.subscribe((data: {
       weather: OpenWeatherApiResponse,
-      airPollution: AirPollutionApiResponse,
-      geolocationName: ReverseGeocoderApiResponse[]
+      airPollution: AirPollutionApiResponse
     }) => {
       if (data.weather) {
         this.currentWeather = data.weather.current;
         this.hourlyWeather = data.weather.hourly.slice(0, 8);
         this.dailyWeather = data.weather.daily;
         this.airPollutionIndex = data.airPollution.list[0].main.aqi;
-
-        this.setGeolocationName(this.getFullGeolocationName(data.geolocationName));
-      } else if (this.dashboardService.getGeolocationAccess()) {
+        this.geolocationName = this.dashboardService.getGeolocationName();
+      } else if (this.dashboardService.isGeolocationBlocked()) {
         this.geolocationState = this.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
-      } else {
+      }
+      else {
         this.geolocationState = this.getEmptyState(EmptyStateTypes.GPS);
       }
     });
@@ -68,7 +66,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.currentWeather = undefined;
         this.airPollutionIndex = undefined;
         this.geolocationState = this.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
-        this.geolocationDenied();
       } else { // geolocationStatus === prompt
         this.currentWeather = undefined;
         this.airPollutionIndex = undefined;
@@ -76,11 +73,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.dashboardService.geolocationPositionChanged$.pipe(takeUntil(this.subsNotifier)).subscribe(() => {
-      this.setWeatherData(this.unitMeasurement);
-      this.setAirPollutionData();
-      this.setGeolocationName();
-    });
+    this.dashboardService.geolocationPositionChanged$.pipe(takeUntil(this.subsNotifier))
+      .subscribe(() => {
+        this.setWeatherData(this.unitMeasurement);
+        this.setAirPollutionData();
+        this.geolocationName = this.dashboardService.getGeolocationName();
+      });
 
     this.setUnitAndTempSymbols(UnitsMeasurement.imperial);
   }
@@ -99,14 +97,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
       if (isPositionEnabled) {
         this.setWeatherData(this.unitMeasurement);
         this.setAirPollutionData();
-        this.setGeolocationName();
+        this.geolocationName = this.dashboardService.getGeolocationName();
       } else {
         this.geolocationState = this.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
       }
     });
-  }
-  geolocationDenied(): void {
-    this.dashboardService.geolocationDenied();
   }
 
   ngOnDestroy(): void {
@@ -127,23 +122,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.dashboardService.getAirPollution().subscribe(airPollution => {
       this.airPollutionIndex = airPollution.list[0].main.aqi;
     });
-  }
-
-  private setGeolocationName(placeName?: string): void {
-    this.geolocationName = this.dashboardService.getGeolocationName();
-
-    if (!this.geolocationName && placeName) {
-      this.geolocationName = placeName;
-    } else if (!this.geolocationName && !placeName) {
-      this.dashboardService.getGeolocationNameWithOpenWeatherApi().subscribe(reverseGeo => {
-        this.geolocationName = this.getFullGeolocationName(reverseGeo);
-      });
-    }
-  }
-
-  private getFullGeolocationName(reverseGeo: ReverseGeocoderApiResponse[]): string {
-    const geolocationNameResp = reverseGeo[0];
-    return geolocationNameResp && geolocationNameResp.state ? `${geolocationNameResp?.name}, ${geolocationNameResp?.state}` : `${geolocationNameResp?.name}`;
   }
 
   private setUnitAndTempSymbols(unit: UnitsMeasurement): void {

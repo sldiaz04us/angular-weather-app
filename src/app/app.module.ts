@@ -2,14 +2,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { GeolocationService } from '@ng-web-apis/geolocation';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { GeolocationApiService } from './core/services/geolocation-api.service';
-import { AgreementDialogService } from './core/dialog/agreement-dialog.service';
-import { WebStorageApiService } from './core/services/web-storage-api.service';
 
 export function geoLocationFactory(geoLocationService: GeolocationApiService
 ): () => Promise<boolean> {
@@ -29,7 +25,7 @@ export function geoLocationFactory(geoLocationService: GeolocationApiService
     {
       provide: APP_INITIALIZER,
       useFactory: geoLocationFactory,
-      deps: [GeolocationApiService, WebStorageApiService, AgreementDialogService, GeolocationService],
+      deps: [GeolocationApiService],
       multi: true
     }
   ],

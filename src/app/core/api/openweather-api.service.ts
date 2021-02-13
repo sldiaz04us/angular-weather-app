@@ -19,8 +19,8 @@ import {
 export class OpenWeatherApiService {
 
   private currentWeatherApiUrl = 'https://api.openweathermap.org/data/2.5/onecall?';
-  private airPollutionApiUrl = 'http://api.openweathermap.org/data/2.5/air_pollution?';
-  private reverseGeocoderUrl = 'http://api.openweathermap.org/geo/1.0/reverse?';
+  private airPollutionApiUrl = 'https://api.openweathermap.org/data/2.5/air_pollution?';
+  private reverseGeocoderUrl = 'https://api.openweathermap.org/geo/1.0/reverse?';
 
   constructor(private http: HttpClient) { }
 

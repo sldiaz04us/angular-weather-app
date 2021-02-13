@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { LOCAL_STORAGE } from '@ng-web-apis/common';
 
 interface WeatherData {
-  geolocationAccess?: boolean;
+  geolocationStatus?: string;
   geolocationName?: string;
   coords?: { lat: number, lng: number };
 }
