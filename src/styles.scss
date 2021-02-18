@@ -122,50 +122,46 @@ $mat-light-theme-background: (
 // Theme Config
 
 body {
-  --primary-color: #333866;
-  --primary-lighter-color: #c2c3d1;
-  --primary-darker-color: #202449;
-  --text-primary-color: #{$light-primary-text};
+  --primary-color: #69c1f8;
+  --primary-lighter-color: #d2ecfd;
+  --primary-darker-color: #4cabf5;
+  --text-primary-color: #{$dark-primary-text};
   --text-primary-lighter-color: #{$dark-primary-text};
-  --text-primary-darker-color: #{$light-primary-text};
+  --text-primary-darker-color: #{$dark-primary-text};
 }
 
 $mat-primary: (
-  main: #333866,
-  lighter: #c2c3d1,
-  darker: #202449,
-  200: #333866,
-  // For slide toggle,
-  contrast:
-    (
-      main: $light-primary-text,
-      lighter: $dark-primary-text,
-      darker: $light-primary-text,
-    ),
+  main: #69c1f8,
+  lighter: #d2ecfd,
+  darker: #4cabf5,
+  200: #69c1f8, // For slide toggle,
+  contrast : (
+    main: $dark-primary-text,
+    lighter: $dark-primary-text,
+    darker: $dark-primary-text,
+  )
 );
 $theme-primary: mat-palette($mat-primary, main, lighter, darker);
 
 body {
-  --accent-color: #adb1cc;
-  --accent-lighter-color: #e6e8f0;
-  --accent-darker-color: #9398b9;
-  --text-accent-color: #{$dark-primary-text};
+  --accent-color: #333866;
+  --accent-lighter-color: #c2c3d1;
+  --accent-darker-color: #202449;
+  --text-accent-color: #{$light-primary-text};
   --text-accent-lighter-color: #{$dark-primary-text};
-  --text-accent-darker-color: #{$dark-primary-text};
+  --text-accent-darker-color: #{$light-primary-text};
 }
 
 $mat-accent: (
-  main: #adb1cc,
-  lighter: #e6e8f0,
-  darker: #9398b9,
-  200: #adb1cc,
-  // For slide toggle,
-  contrast:
-    (
-      main: $dark-primary-text,
-      lighter: $dark-primary-text,
-      darker: $dark-primary-text,
-    ),
+  main: #333866,
+  lighter: #c2c3d1,
+  darker: #202449,
+  200: #333866, // For slide toggle,
+  contrast : (
+    main: $light-primary-text,
+    lighter: $dark-primary-text,
+    darker: $light-primary-text,
+  )
 );
 $theme-accent: mat-palette($mat-accent, main, lighter, darker);
 

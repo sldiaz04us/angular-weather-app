@@ -1,4 +1,4 @@
-<section class="left">
+<section>
   <mat-form-field appearance="outline">
     <mat-label>Search</mat-label>
     <input
@@ -10,7 +10,7 @@
       [matAutocomplete]="auto"
     />
     <button mat-icon-button matSuffix aria-label="GPS icon button">
-      <mat-icon>{{
+      <mat-icon color="primary">{{
         isLocationEnable ? "gps_fixed" : "gps_not_fixed"
       }}</mat-icon>
     </button>
@@ -24,7 +24,7 @@
       </mat-option>
       <ng-container *ngIf="!isLoading">
         <mat-option [value]="gpsPrediction"
-          ><mat-icon [ngStyle]="{ color: 'var(--blue)' }">gps_fixed</mat-icon>
+          ><mat-icon color="primary">gps_fixed</mat-icon>
           Your location</mat-option
         >
         <mat-divider></mat-divider>
@@ -40,8 +40,4 @@
       </ng-container>
     </mat-autocomplete>
   </mat-form-field>
-</section>
-
-<section class="right">
-  <img src="assets/images/profile-picture.png" alt="Profile picture" />
 </section>

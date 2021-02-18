@@ -1,33 +1,21 @@
 :host {
   display: grid;
   grid-area: toolbar;
-  grid-template-columns: 3fr 1fr;
+  grid-template-columns: 1fr;
 
   padding: 1rem;
   max-height: 6em;
 
-  .left {
-    .mat-form-field {
-      width: 100%;
-      max-width: 20em;
-    }
-    .mat-icon {
-      color: var(--blue);
-    }
-  }
-
-  .right {
-    place-self: start end;
-    margin: 0.25em 0;
-
-    img {
-      width: 3em;
-      height: 3em;
-    }
+  section .mat-form-field {
+    width: 100%;
   }
 
   /* large screens */
   @media only screen and (min-width: 600px) {
     margin-left: 5rem;
+
+    section .mat-form-field {
+      max-width: 20em;
+    }
   }
 }
