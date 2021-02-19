@@ -1,7 +1,7 @@
 <nav class="navbar" [class]="isOpen ? 'open' : ''">
   <ul class="navbar-nav">
     <li class="logo">
-      <a class="nav-link">
+      <div class="nav-link">
         <span class="link-text logo-text">Weather</span>
         <svg
           (click)="isOpen = !isOpen"
@@ -27,7 +27,7 @@
             ></path>
           </g>
         </svg>
-      </a>
+      </div>
     </li>
     <li
       (click)="close()"

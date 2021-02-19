@@ -12,20 +12,12 @@
     grid-template-columns: 1fr 1fr;
     .humidity {
       place-self: center end;
-      img {
-        width: 32px;
-        height: 32px;
-      }
       p {
         color: var(--dark-gray);
       }
     }
     .wind {
       place-self: center start;
-      img {
-        width: 32px;
-        height: 32px;
-      }
       p {
         color: var(--dark-gray);
       }

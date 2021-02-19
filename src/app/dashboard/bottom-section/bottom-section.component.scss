@@ -16,11 +16,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
-    img {
-      width: 5em;
-      height: 5em;
-    }
   }
 }
 
@@ -53,8 +48,6 @@
             position: absolute;
             top: -1em;
             right: -1em;
-            width: 4em;
-            height: 4em;
         }
     }
     .temp{

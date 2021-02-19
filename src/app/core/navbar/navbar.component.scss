@@ -103,7 +103,7 @@
         display: block;
         transition: opacity var(--transition-speed);
       }
-      .logo a svg {
+      .logo div svg {
         transform: rotate(-180deg);
       }
     }

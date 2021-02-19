@@ -1,13 +1,23 @@
 <section class="top">
   <h2 class="medium-text-semibold">Sunrise & Sunset</h2>
   <div class="sunrise">
-    <img src="assets/icons/dashboard/sunrise.svg" alt="Sunrise" />
+    <img
+      src="assets/icons/dashboard/sunrise.svg"
+      width="52"
+      height="52"
+      alt="Sunrise"
+    />
     <p class="medium-text-semibold">
       {{ current?.sunrise | customDate: "shortTime" }}
     </p>
   </div>
   <div class="sunset">
-    <img src="assets/icons/dashboard/sunset.svg" alt="Sunset" />
+    <img
+      src="assets/icons/dashboard/sunset.svg"
+      width="52"
+      height="52"
+      alt="Sunset"
+    />
     <p class="medium-text-semibold">
       {{ current?.sunset | customDate: "shortTime" }}
     </p>
