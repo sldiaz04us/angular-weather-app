@@ -1,5 +1,8 @@
 <section>
-  <mat-tab-group>
+  <mat-tab-group
+    [animationDuration]="(webBreakpoints | async).matches ? '500' : '200'"
+    [disablePagination]="true"
+  >
     <mat-tab label="Today">
       <div class="today-forecast">
         <div
