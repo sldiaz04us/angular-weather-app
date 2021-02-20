@@ -54,12 +54,10 @@ export class ToolbarComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.isLocationEnable = this.dashboardService.isGeolocationEnabled();
+
     this.dashboardService.geolocationStatusChanged$.pipe(takeUntil(this.subsNotifier)).subscribe(geolocationStatus => {
-      if (geolocationStatus === 'granted') {
-        this.isLocationEnable = true;
-      } else {
-        this.isLocationEnable = false;
-      }
+      this.isLocationEnable = geolocationStatus === 'granted';
     });
   }
 

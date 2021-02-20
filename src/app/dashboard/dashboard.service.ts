@@ -69,6 +69,10 @@ export class DashboardService {
     return this.geolocationApiService.getGeolocationStatus() === 'denied';
   }
 
+  isGeolocationEnabled(): boolean {
+    return this.geolocationApiService.getGeolocationStatus() === 'granted';
+  }
+
   getGeolocationName(): string {
     return this.geolocationApiService.getGeolocationName();
   }

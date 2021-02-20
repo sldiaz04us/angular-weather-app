@@ -59,7 +59,7 @@
       .very-high,
       .poor {
         border-color: #ec4d4d;
-        background-color: #ef6464;
+        background-color: #f37171;
       }
       .extreme,
       .very-poor {
@@ -73,7 +73,7 @@
     }
 
     .chip {
-      color: var(--dashboard-dark);
+      color: black;
       border-radius: 15px;
       padding: 3px 15px;
     }
