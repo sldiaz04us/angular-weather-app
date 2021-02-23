@@ -18,6 +18,7 @@ import { GeolocationPosition } from '../shared/models/geolocation-position.model
 export class DashboardService {
   geolocationStatusChanged$ = this.geolocationApiService.geolocationStatusChanged$;
   geolocationPositionChanged$ = this.geolocationApiService.geolocationPositionChanged$;
+  geolocationNameChanged$ = this.geolocationApiService.geolocationNameChanged$;
 
   constructor(
     private openWeatherApiService: OpenWeatherApiService,
@@ -67,17 +68,6 @@ export class DashboardService {
 
   isGeolocationBlocked(): boolean {
     return this.geolocationApiService.getGeolocationStatus() === 'denied';
-  }
-
-  isGeolocationEnabled(): boolean {
-    return this.geolocationApiService.getGeolocationStatus() === 'granted';
-  }
-
-  getGeolocationName(): string {
-    return this.geolocationApiService.getGeolocationName();
-  }
-  setGeolocationName(locationName: string): void {
-    this.geolocationApiService.setGeolocationName(locationName);
   }
 
   requestGeolocation(): void {

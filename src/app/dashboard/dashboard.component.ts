@@ -50,11 +50,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.hourlyWeather = data.weather.hourly.slice(0, 8);
         this.dailyWeather = data.weather.daily;
         this.airPollutionIndex = data.airPollution.list[0].main.aqi;
-        this.geolocationName = this.dashboardService.getGeolocationName();
       } else if (this.dashboardService.isGeolocationBlocked()) {
         this.geolocationState = this.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
-      }
-      else {
+      } else {
         this.geolocationState = this.getEmptyState(EmptyStateTypes.GPS);
       }
     });
@@ -77,8 +75,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.setWeatherData(this.unitMeasurement);
         this.setAirPollutionData();
-        this.geolocationName = this.dashboardService.getGeolocationName();
       });
+
+    this.dashboardService.geolocationNameChanged$.pipe(takeUntil(this.subsNotifier))
+      .subscribe(geolocationName => this.geolocationName = geolocationName);
 
     this.setUnitAndTempSymbols(UnitsMeasurement.imperial);
   }
@@ -97,7 +97,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       if (isPositionEnabled) {
         this.setWeatherData(this.unitMeasurement);
         this.setAirPollutionData();
-        this.geolocationName = this.dashboardService.getGeolocationName();
       } else {
         this.geolocationState = this.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
       }

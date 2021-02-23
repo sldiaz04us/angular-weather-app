@@ -1,11 +1,9 @@
 import {
   Component,
-  OnInit,
   ViewChild,
   ElementRef,
   AfterViewInit,
-  NgZone,
-  OnDestroy
+  NgZone
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
@@ -13,17 +11,17 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 import { } from 'googlemaps';
 
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 
-import { DashboardService } from '../../dashboard/dashboard.service';
 import { ErrorDialogService } from '../dialog/error-dialog.service';
+import { GeolocationApiService } from '../services/geolocation-api.service';
+
 @Component({
   selector: 'app-toolbar',
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss']
 })
-export class ToolbarComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ToolbarComponent implements AfterViewInit {
   @ViewChild('autocomplete') autocompleteRef: ElementRef;
 
   private placesService: google.maps.places.PlacesService;
@@ -33,9 +31,6 @@ export class ToolbarComponent implements OnInit, AfterViewInit, OnDestroy {
   searchPredictions: google.maps.places.AutocompletePrediction[];
   searchControl = new FormControl();
   isLoading = false;
-
-  private subsNotifier = new Subject();
-  isLocationEnable = false;
 
   readonly gpsPrediction = {
     description: 'GPS',
@@ -49,17 +44,9 @@ export class ToolbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private ngZone: NgZone,
-    private dashboardService: DashboardService,
+    private geolocationApiService: GeolocationApiService,
     private errorDialogService: ErrorDialogService,
   ) { }
-
-  ngOnInit(): void {
-    this.isLocationEnable = this.dashboardService.isGeolocationEnabled();
-
-    this.dashboardService.geolocationStatusChanged$.pipe(takeUntil(this.subsNotifier)).subscribe(geolocationStatus => {
-      this.isLocationEnable = geolocationStatus === 'granted';
-    });
-  }
 
   ngAfterViewInit(): void {
     this.placesService = new google.maps.places.PlacesService(this.autocompleteRef.nativeElement);
@@ -76,11 +63,6 @@ export class ToolbarComponent implements OnInit, AfterViewInit, OnDestroy {
       this.isLoading = true;
       this.autocompleteService.getPlacePredictions({ input: value }, this.placePredictionsCallback.bind(this));
     });
-  }
-
-  ngOnDestroy(): void {
-    this.subsNotifier.next();
-    this.subsNotifier.complete();
   }
 
   private placePredictionsCallback(
@@ -113,7 +95,7 @@ export class ToolbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onSelectedOption(selected: MatAutocompleteSelectedEvent): void {
     if (selected.option.value.description === 'GPS') {
-      this.dashboardService.requestGeolocation();
+      this.geolocationApiService.requestGeolocation();
     } else if (selected.option.value.place_id) {
       this.placeDescriptionSelected = selected.option.value.description;
       const placeRequest = {
@@ -137,8 +119,8 @@ export class ToolbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.ngZone.run(() => {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
-        this.dashboardService.setGeolocationName(this.placeDescriptionSelected);
-        this.dashboardService.updateGeolocationPosition(
+        this.geolocationApiService.setGeolocationName(this.placeDescriptionSelected);
+        this.geolocationApiService.setGeolocationPosition(
           result.geometry.location.toJSON().lat,
           result.geometry.location.toJSON().lng
         );

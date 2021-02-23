@@ -1,10 +1,10 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
 
 import { GeolocationService } from '@ng-web-apis/geolocation';
-import { PermissionsService } from '@ng-web-apis/permissions';
+import { PermissionsService, PERMISSIONS_SUPPORT } from '@ng-web-apis/permissions';
 
-import { Observable, Subject } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
+import { catchError, take, takeUntil } from 'rxjs/operators';
 
 import { GeolocationPosition, GeolocationPositionError } from 'src/app/shared/models/geolocation-position.model';
 import { AgreementDialogService } from '../dialog/agreement-dialog.service';
@@ -18,7 +18,6 @@ import { OpenWeatherApiService } from '../api/openweather-api.service';
 export class GeolocationApiService implements OnDestroy {
   private geolocationPosition: GeolocationPosition;
   private geolocationStatus: string;
-  private geolocationName: string;
 
   private geocoder: google.maps.Geocoder;
 
@@ -28,6 +27,9 @@ export class GeolocationApiService implements OnDestroy {
   private geolocationPositionSubject = new Subject<void>();
   geolocationPositionChanged$: Observable<void>;
 
+  private geolocationNameSubject = new BehaviorSubject<string>(undefined);
+  geolocationNameChanged$: Observable<string>;
+
   private subsNotifier = new Subject();
 
   constructor(
@@ -36,21 +38,26 @@ export class GeolocationApiService implements OnDestroy {
     private readonly errorDialogService: ErrorDialogService,
     private readonly webStorageApiService: WebStorageApiService,
     private readonly permissions: PermissionsService,
-    private readonly openWeatherApiService: OpenWeatherApiService
+    private readonly openWeatherApiService: OpenWeatherApiService,
+    @Inject(PERMISSIONS_SUPPORT) private readonly permissionsSupport: boolean
   ) {
     this.geocoder = new google.maps.Geocoder();
     this.geolocationPositionChanged$ = this.geolocationPositionSubject.asObservable();
     this.geolocationStatusChanged$ = this.geolocationStatusSubject.asObservable();
+    this.geolocationNameChanged$ = this.geolocationNameSubject.asObservable();
 
-    this.permissions.state('geolocation').pipe(takeUntil(this.subsNotifier))
-      .subscribe(geolocationStatus => {
+    if (permissionsSupport) {
+      this.permissions.state('geolocation').pipe(
+        takeUntil(this.subsNotifier),
+        catchError(err => throwError(err))
+      ).subscribe(geolocationStatus => {
         console.log('GeolocationStatus:', geolocationStatus);
 
         this.geolocationStatus = geolocationStatus;
-        this.webStorageApiService.updateLocalStorageItem({ geolocationStatus });
-
         this.geolocationStatusSubject.next(geolocationStatus);
+        this.webStorageApiService.updateLocalStorageItem({ geolocationStatus });
       });
+    }
   }
 
   public load(): Promise<boolean> {
@@ -68,7 +75,7 @@ export class GeolocationApiService implements OnDestroy {
       } else if (weatherData && weatherData.geolocationStatus === 'denied') {
         if (weatherData.coords) {
           this.setGeolocationPosition(weatherData.coords.lat, weatherData.coords.lng);
-          this.geolocationName = weatherData.geolocationName;
+          this.geolocationNameSubject.next(weatherData.geolocationName);
         }
         resolve(true);
       }
@@ -79,14 +86,11 @@ export class GeolocationApiService implements OnDestroy {
     });
   }
 
-  async requestGeolocation(): Promise<void> {
-    await this.geolocation$.pipe(take(1)).toPromise()
-      .then(async location => {
+  requestGeolocation(): void {
+    this.geolocation$.pipe(take(1)).toPromise()
+      .then(location => {
         this.saveGeolocationInLocalStorage(location);
-
-        if (this.geolocationStatus === 'granted') {
-          await this.setLocationNameWithGoogleApi();
-        }
+        this.setGeolocationNameWithGoogleApi();
         this.geolocationPositionSubject.next();
       })
       .catch((error: GeolocationPositionError) => {
@@ -103,16 +107,14 @@ export class GeolocationApiService implements OnDestroy {
         console.log('Getting location:', location);
 
         this.saveGeolocationInLocalStorage(location);
-
-        await this.setLocationNameWithGoogleApi();
+        await this.setGeolocationNameWithGoogleApi();
         resolve(true);
-      },
-        (error: GeolocationPositionError) => {
-          console.log('Error getting location:', error);
+      }, (error: GeolocationPositionError) => {
+        console.log('Error getting location:', error);
 
-          this.showGeolocationErrorDenied(error);
-          resolve(false);
-        });
+        this.showGeolocationErrorDenied(error);
+        resolve(false);
+      });
     });
   }
 
@@ -121,10 +123,10 @@ export class GeolocationApiService implements OnDestroy {
       coords: { latitude, longitude },
       timestamp: new Date().getTime()
     };
+    this.geolocationPositionSubject.next();
     this.webStorageApiService.updateLocalStorageItem(
       { coords: { lat: latitude, lng: longitude } }
     );
-    this.geolocationPositionSubject.next();
   }
   getGeolocationPosition(): GeolocationPosition {
     return this.geolocationPosition;
@@ -135,11 +137,8 @@ export class GeolocationApiService implements OnDestroy {
   }
 
   setGeolocationName(locationName: string): void {
-    this.geolocationName = locationName;
+    this.geolocationNameSubject.next(locationName);
     this.webStorageApiService.updateLocalStorageItem({ geolocationName: locationName });
-  }
-  getGeolocationName(): string {
-    return this.geolocationName;
   }
 
   ngOnDestroy(): void {
@@ -147,7 +146,7 @@ export class GeolocationApiService implements OnDestroy {
     this.subsNotifier.complete();
   }
 
-  private setLocationNameWithGoogleApi(): Promise<void> {
+  private setGeolocationNameWithGoogleApi(): Promise<void> {
     return new Promise(resolve => {
       this.geocoder.geocode({
         location: {
@@ -157,15 +156,19 @@ export class GeolocationApiService implements OnDestroy {
       }, async (geocoderResult, geocoderStatus) => {
         console.log('Geocoder status:', geocoderStatus);
         console.log('Geocoder result:', geocoderResult);
+
         if (geocoderStatus === google.maps.GeocoderStatus.OK) {
           const locationNameFiltered = geocoderResult.filter(result =>
             result.types.includes('locality') ||
+            result.types.includes('postal_code') ||
             result.types.includes('administrative_area_level_2')
           );
 
           if (locationNameFiltered.length > 0) {
-            this.geolocationName = locationNameFiltered[0].formatted_address;
-            this.webStorageApiService.updateLocalStorageItem({ geolocationName: this.geolocationName });
+            const locationName = locationNameFiltered[0].formatted_address;
+
+            this.geolocationNameSubject.next(locationName);
+            this.webStorageApiService.updateLocalStorageItem({ geolocationName: locationName });
           } else {
             await this.setGeolocationNameWithOpenWeatherApi();
           }
@@ -182,10 +185,10 @@ export class GeolocationApiService implements OnDestroy {
         this.geolocationPosition.coords.longitude,
       ).subscribe(reverseGeo => {
         const firstMatch = reverseGeo[0];
-        this.geolocationName = firstMatch && firstMatch.state ? `${firstMatch?.name}, ${firstMatch?.state}` : `${firstMatch?.name}`;
+        const locationName = firstMatch && firstMatch.state ? `${firstMatch?.name}, ${firstMatch?.state}` : `${firstMatch?.name}`;
 
-        this.webStorageApiService.updateLocalStorageItem({ geolocationName: this.geolocationName });
-
+        this.geolocationNameSubject.next(locationName);
+        this.webStorageApiService.updateLocalStorageItem({ geolocationName: locationName });
         resolve(true);
       }, () => resolve(false));
     });
