@@ -43,7 +43,7 @@
       &.router-link-active {
         background-color: var(--blue);
         border-bottom: 0.2em solid var(--dashboard-dark);
-        border-left:none;
+        border-left: none;
       }
     }
   }
@@ -58,12 +58,6 @@
   text-decoration: none;
   filter: grayscale(100%) opacity(0.7);
   transition: color var(--transition-speed);
-
-  &:hover {
-    filter: grayscale(0%) opacity(1);
-    background: var(--blue);
-    color: var(--dashboard-dark);
-  }
 
   svg {
     width: 2rem;
@@ -125,5 +119,11 @@
   .nav-link {
     justify-content: flex-start;
     height: 5rem;
+
+    &:hover {
+      filter: grayscale(0%) opacity(1);
+      background: var(--blue);
+      color: var(--dashboard-dark);
+    }
   }
 }
