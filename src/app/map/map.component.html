@@ -1,0 +1,23 @@
+<widget-empty-state>
+  <img
+    empty-state-img
+    [src]="implementationState.imageSrc"
+    [alt]="implementationState.imageAlt"
+    width="320"
+    height="180"
+  />
+  <h2 empty-state-title class="large-text-semibold">
+    {{ implementationState.title || "Radar Map" }}
+  </h2>
+  <p empty-state-content class="normal-text">
+    {{ implementationState.content || "Radar Map is not yet implemented." }}
+  </p>
+  <button
+    empty-state-action
+    mat-stroked-button
+    color="primary"
+    (click)="navigateToDashboard()"
+  >
+    {{ implementationState.buttonText }}
+  </button>
+</widget-empty-state>

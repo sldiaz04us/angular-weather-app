@@ -11,6 +11,10 @@ const routes: Routes = [
     path: 'locations',
     loadChildren: () => import('./locations/locations.module').then(m => m.LocationsModule)
   },
+  {
+    path: 'map',
+    loadChildren: () => import('./map/map.module').then(m => m.MapModule)
+  },
   { path: '**', pathMatch: 'full', redirectTo: 'dashboard' }
 ];
 
