@@ -39,7 +39,7 @@ export class GeolocationApiService implements OnDestroy {
     private readonly webStorageApiService: WebStorageApiService,
     private readonly permissions: PermissionsService,
     private readonly openWeatherApiService: OpenWeatherApiService,
-    @Inject(PERMISSIONS_SUPPORT) private readonly permissionsSupport: boolean
+    @Inject(PERMISSIONS_SUPPORT) readonly permissionsSupport: boolean
   ) {
     this.geocoder = new google.maps.Geocoder();
     this.geolocationPositionChanged$ = this.geolocationPositionSubject.asObservable();

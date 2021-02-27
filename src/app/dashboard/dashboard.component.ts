@@ -13,8 +13,8 @@ import {
 } from '../core/api/openweather-api.model';
 import { UnitsMeasurement } from '../shared/enums/units-measurement.enum';
 import { EmptyState } from '../shared/models/empty-state.model';
-import { emptyStates } from '../shared/constants/empty-states.assets';
 import { EmptyStateTypes } from '../shared/enums/empty-states.enum';
+import { EmptyStateService } from '../core/services/empty-state.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -36,7 +36,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private dashboardService: DashboardService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private emptyStateService: EmptyStateService
   ) { }
 
   ngOnInit(): void {
@@ -51,9 +52,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.dailyWeather = data.weather.daily;
         this.airPollutionIndex = data.airPollution.list[0].main.aqi;
       } else if (this.dashboardService.isGeolocationBlocked()) {
-        this.geolocationState = this.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
+        this.geolocationState = this.emptyStateService.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
       } else {
-        this.geolocationState = this.getEmptyState(EmptyStateTypes.GPS);
+        this.geolocationState = this.emptyStateService.getEmptyState(EmptyStateTypes.GPS);
       }
     });
 
@@ -63,11 +64,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
       } else if (geolocationStatus === 'denied') {
         this.currentWeather = undefined;
         this.airPollutionIndex = undefined;
-        this.geolocationState = this.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
+        this.geolocationState = this.emptyStateService.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
       } else { // geolocationStatus === prompt
         this.currentWeather = undefined;
         this.airPollutionIndex = undefined;
-        this.geolocationState = this.getEmptyState(EmptyStateTypes.GPS);
+        this.geolocationState = this.emptyStateService.getEmptyState(EmptyStateTypes.GPS);
       }
     });
 
@@ -98,7 +99,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.setWeatherData(this.unitMeasurement);
         this.setAirPollutionData();
       } else {
-        this.geolocationState = this.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
+        this.geolocationState = this.emptyStateService.getEmptyState(EmptyStateTypes.GPS_BLOCKED);
       }
     });
   }
@@ -132,9 +133,5 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.unitSymbol = 'mph';
       this.temperatureSymbol = '°F';
     }
-  }
-
-  private getEmptyState(emptyStateType: EmptyStateTypes): EmptyState {
-    return emptyStates.find(state => state.id === emptyStateType);
   }
 }

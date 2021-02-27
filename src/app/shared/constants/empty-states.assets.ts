@@ -17,4 +17,10 @@ export const emptyStates: EmptyState[] = [
     title: 'GPS Blocked',
     content: 'Use the browser menu options to select Always Ask when a site tries to get the current location.',
   },
+  {
+    id: EmptyStateTypes.NOT_IMPLEMENTED,
+    imageSrc: 'assets/icons/global/not-implemented.svg',
+    imageAlt: 'Feature not implemented',
+    buttonText: 'Go to Dashboard'
+  }
 ];

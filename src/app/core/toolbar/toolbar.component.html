@@ -14,12 +14,14 @@
       [displayWith]="displayFn"
       (optionSelected)="onSelectedOption($event)"
     >
-      <mat-option *ngIf="isLoading">
-        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-      </mat-option>
+      <ng-container *ngIf="isLoading">
+        <mat-option>
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </mat-option>
+      </ng-container>
       <ng-container *ngIf="!isLoading">
         <mat-option [value]="gpsPrediction">
-          <mat-icon color="primary">gps_fixed</mat-icon> Your location
+          <mat-icon color="primary">share_location</mat-icon> Your location
         </mat-option>
         <mat-divider></mat-divider>
         <mat-option
