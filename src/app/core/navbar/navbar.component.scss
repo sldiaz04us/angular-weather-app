@@ -37,7 +37,7 @@
       width: 100%;
 
       &:last-child {
-        margin-top: auto;
+        margin-top: 0;
       }
 
       &.router-link-active {
@@ -109,9 +109,14 @@
         display: block;
       }
 
-      .nav-item.router-link-active {
-        border-left: 0.2em solid var(--dashboard-dark);
-        border-bottom: none;
+      .nav-item {
+        &:last-child {
+          margin-top: auto;
+        }
+        &.router-link-active {
+          border-left: 0.2em solid var(--dashboard-dark);
+          border-bottom: none;
+        }
       }
     }
   }
