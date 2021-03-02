@@ -4,10 +4,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { POSITION_OPTIONS } from '@ng-web-apis/geolocation';
 
+import { ServiceWorkerModule } from '@angular/service-worker';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { GeolocationApiService } from './core/services/geolocation-api.service';
+import { environment } from '../environments/environment';
 
 export function geoLocationFactory(geoLocationService: GeolocationApiService
 ): () => Promise<boolean> {
@@ -22,6 +25,7 @@ export function geoLocationFactory(geoLocationService: GeolocationApiService
     AppRoutingModule,
     BrowserAnimationsModule,
     CoreModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   providers: [
     {

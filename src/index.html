@@ -3,22 +3,40 @@
   <head>
     <meta charset="utf-8" />
     <meta name="description" content="Get the most accurate weather forecast" />
-    <title>WeatherApp</title>
+    <title>Weather App</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+    <!-- PWA config -->
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="prefetch" href="manifest.webmanifest" />
+    <meta name="theme-color" content="#b3e0fb" />
+
+    <!-- iOS and iPadOS config -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="white" />
+    <link rel="apple-touch-icon" href="assets/icons/pwa/apple-touch-icon.png" />
+    <link rel="prefetch" href="assets/icons/pwa/apple-touch-icon.png" />
+    <!-- Script that generates all the images for the splash screen -->
+    <script
+      async
+      src="https://cdn.jsdelivr.net/npm/pwacompat"
+      crossorigin="anonymous"
+    ></script>
+    <!-- End PWA config -->
+
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://api.openweathermap.org" crossorigin />
     <link rel="preconnect" href="https://maps.googleapis.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons&display=block"
       media="print"
       onload="this.media='all'"
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap"
       rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap"
       media="print"
       onload="this.media='all'"
     />
@@ -29,5 +47,8 @@
   </head>
   <body>
     <app-root></app-root>
+    <noscript>
+      Please enable JavaScript to continue using this application.
+    </noscript>
   </body>
 </html>

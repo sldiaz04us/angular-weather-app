@@ -21,14 +21,17 @@
       </ng-container>
       <ng-container *ngIf="!isLoading">
         <mat-option [value]="gpsPrediction">
-          <mat-icon color="primary">share_location</mat-icon> Your location
+          <mat-icon color="primary" aria-label="Share location icon">
+            share_location
+          </mat-icon>
+          Your location
         </mat-option>
         <mat-divider></mat-divider>
         <mat-option
           *ngFor="let prediction of searchPredictions"
           [value]="prediction"
         >
-          <mat-icon [ngStyle]="{ color: 'var(--dashboard-dark)' }">
+          <mat-icon color="accent" aria-label="Place location icon">
             {{ prediction.place_id ? "location_on" : "not_listed_location" }}
           </mat-icon>
           {{ prediction.description }}

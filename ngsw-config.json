@@ -1,0 +1,46 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/index.html",
+          "/manifest.webmanifest",
+          "/*.css",
+          "/*.js"
+        ]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/assets/**",
+          "/*.(eot|svg|cur|jpg|png|webp|gif|otf|ttf|woff|woff2|ani)"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "openweather-api",
+      "urls": [
+        "https://api.openweathermap.org/data/2.5/onecall?*",
+        "https://api.openweathermap.org/data/2.5/air_pollution?*"
+      ],
+      "version": 2,
+      "cacheConfig": {
+        "maxSize": 3,
+        "maxAge": "10m",
+        "timeout": "6s",
+        "strategy": "freshness"
+      }
+    }
+  ]
+}
