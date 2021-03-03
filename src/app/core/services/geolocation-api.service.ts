@@ -63,7 +63,18 @@ export class GeolocationApiService implements OnDestroy {
   public load(): Promise<boolean> {
     return new Promise(async (resolve) => {
       const weatherData = this.webStorageApiService.getLocalStorageItem();
-      if (!weatherData) {
+      if (weatherData) {
+        if (weatherData.coords) {
+          this.setGeolocationPosition(weatherData.coords.lat, weatherData.coords.lng);
+          this.geolocationNameSubject.next(weatherData.geolocationName);
+        }
+
+        if (weatherData.geolocationStatus === 'granted') {
+          await this.setGeolocation();
+        }
+        resolve(true);
+      }
+      else {
         this.agreementDialogService.openDialog();
         this.agreementDialogService.dialogReference.afterClosed()
           .subscribe(async (agree: boolean) => {
@@ -72,16 +83,6 @@ export class GeolocationApiService implements OnDestroy {
             }
             resolve(true);
           });
-      } else if (weatherData && weatherData.geolocationStatus === 'denied') {
-        if (weatherData.coords) {
-          this.setGeolocationPosition(weatherData.coords.lat, weatherData.coords.lng);
-          this.geolocationNameSubject.next(weatherData.geolocationName);
-        }
-        resolve(true);
-      }
-      else { // geolocationStatus === granted || prompt
-        await this.setGeolocation();
-        resolve(true);
       }
     });
   }
@@ -172,8 +173,8 @@ export class GeolocationApiService implements OnDestroy {
           } else {
             await this.setGeolocationNameWithOpenWeatherApi();
           }
-          resolve();
         }
+        resolve();
       });
     });
   }
