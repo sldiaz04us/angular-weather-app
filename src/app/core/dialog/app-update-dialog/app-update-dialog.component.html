@@ -1,0 +1,17 @@
+<h2 mat-dialog-title class="heading-2">Update Available</h2>
+<mat-dialog-content>
+  <p>Do you want to update the application with the latest version?</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button [mat-dialog-close]="false" color="warn">
+    NOT NOW
+  </button>
+  <button
+    mat-stroked-button
+    [mat-dialog-close]="true"
+    cdkFocusInitial
+    color="accent"
+  >
+    ACCEPT
+  </button>
+</mat-dialog-actions>
