@@ -134,12 +134,14 @@ $mat-primary: (
   main: #69c1f8,
   lighter: #d2ecfd,
   darker: #4cabf5,
-  200: #69c1f8, // For slide toggle,
-  contrast : (
-    main: $dark-primary-text,
-    lighter: $dark-primary-text,
-    darker: $dark-primary-text,
-  )
+  200: #69c1f8,
+  // For slide toggle,
+  contrast:
+    (
+      main: $dark-primary-text,
+      lighter: $dark-primary-text,
+      darker: $dark-primary-text,
+    ),
 );
 $theme-primary: mat-palette($mat-primary, main, lighter, darker);
 
@@ -156,12 +158,14 @@ $mat-accent: (
   main: #333866,
   lighter: #c2c3d1,
   darker: #202449,
-  200: #333866, // For slide toggle,
-  contrast : (
-    main: $light-primary-text,
-    lighter: $dark-primary-text,
-    darker: $light-primary-text,
-  )
+  200: #333866,
+  // For slide toggle,
+  contrast:
+    (
+      main: $light-primary-text,
+      lighter: $dark-primary-text,
+      darker: $light-primary-text,
+    ),
 );
 $theme-accent: mat-palette($mat-accent, main, lighter, darker);
 
@@ -223,4 +227,12 @@ $theme: mat-light-theme($theme-primary, $theme-accent);
   font-size: 0.7em;
   font-weight: 600;
   color: var(--dark-gray);
+}
+
+/*
+ * Angular Material
+ */
+.mat-snack-bar-container {
+  background-color: var(--blue);
+  color: black;
 }

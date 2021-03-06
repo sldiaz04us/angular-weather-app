@@ -25,6 +25,7 @@
     "@ng-web-apis/common": "^1.9.0",
     "@ng-web-apis/geolocation": "^1.0.3",
     "@ng-web-apis/permissions": "^1.0.0",
+    "ng-connection-service": "^1.0.4",
     "rxjs": "^6.6.3",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"

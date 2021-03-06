@@ -1,10 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 
 import { POSITION_OPTIONS } from '@ng-web-apis/geolocation';
-
-import { ServiceWorkerModule } from '@angular/service-worker';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,6 +26,7 @@ export function geoLocationFactory(geoLocationService: GeolocationApiService
     BrowserAnimationsModule,
     CoreModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    MatSnackBarModule
   ],
   providers: [
     {
@@ -37,7 +38,8 @@ export function geoLocationFactory(geoLocationService: GeolocationApiService
       useFactory: geoLocationFactory,
       deps: [GeolocationApiService],
       multi: true
-    }
+    },
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 4000 } }
   ],
   bootstrap: [AppComponent]
 })

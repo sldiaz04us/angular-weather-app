@@ -1,0 +1,12 @@
+<ng-container *ngIf="isConnected">
+  <p>
+    Back <span class="online medium-text-semibold">Online!</span> The App will
+    work as usual.
+  </p>
+</ng-container>
+<ng-container *ngIf="!isConnected">
+  <p>
+    You are <span class="offline medium-text-semibold">Offline!</span> Some
+    features of the App may not work.
+  </p>
+</ng-container>

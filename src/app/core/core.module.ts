@@ -16,10 +16,11 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { ToolbarComponent } from '../core/toolbar/toolbar.component';
 import { ErrorHandlerModule } from './errors/error-handler.module';
 import { DialogModule } from './dialog/dialog.module';
+import { SnackbarComponent } from './snackbar/snackbar.component';
 
 
 @NgModule({
-  declarations: [NavbarComponent, ToolbarComponent],
+  declarations: [NavbarComponent, ToolbarComponent, SnackbarComponent],
   imports: [
     CommonModule,
     HttpClientModule,
