@@ -7,8 +7,8 @@ import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
 import { catchError, take, takeUntil } from 'rxjs/operators';
 
 import { GeolocationPosition, GeolocationPositionError } from 'src/app/shared/models/geolocation-position.model';
-import { AgreementDialogService } from '../dialog/agreement-dialog.service';
-import { ErrorDialogService } from '../dialog/error-dialog.service';
+import { AgreementDialogService } from '../dialog/agreement-dialog/agreement-dialog.service';
+import { ErrorDialogService } from '../dialog/error-dialog/error-dialog.service';
 import { WebStorageApiService } from './web-storage-api.service';
 import { OpenWeatherApiService } from '../api/openweather-api.service';
 

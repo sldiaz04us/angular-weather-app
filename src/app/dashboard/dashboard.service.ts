@@ -78,10 +78,6 @@ export class DashboardService {
     return await this.geolocationApiService.setGeolocation();
   }
 
-  updateGeolocationPosition(lat: number, lng: number): void {
-    this.geolocationApiService.setGeolocationPosition(lat, lng);
-  }
-
   private getGeolocationPosition(): GeolocationPosition {
     return this.geolocationApiService.getGeolocationPosition();
   }

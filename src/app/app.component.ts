@@ -6,8 +6,8 @@ import { LOCATION } from '@ng-web-apis/common';
 
 import { ConnectionService } from 'ng-connection-service';
 
-import { AppUpdateDialogService } from './core/dialog/app-update-dialog.service';
-import { ErrorDialogService } from './core/dialog/error-dialog.service';
+import { AppUpdateDialogService } from './core/dialog/app-update-dialog/app-update-dialog.service';
+import { ErrorDialogService } from './core/dialog/error-dialog/error-dialog.service';
 import { SnackbarComponent } from './core/snackbar/snackbar.component';
 
 @Component({

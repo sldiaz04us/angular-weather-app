@@ -3,9 +3,9 @@ import { Inject, Injectable } from '@angular/core';
 import { LOCAL_STORAGE } from '@ng-web-apis/common';
 
 interface WeatherData {
-  geolocationStatus?: string;
-  geolocationName?: string;
-  coords?: { lat: number, lng: number };
+  geolocationStatus: string;
+  geolocationName: string;
+  coords: { lat: number, lng: number };
 }
 
 @Injectable({
@@ -25,8 +25,8 @@ export class WebStorageApiService {
     this.localStorage.setItem(this.WEATHER_DATA, JSON.stringify({ ...value }));
   }
 
-  updateLocalStorageItem(value: WeatherData): void {
-    const weatherDataParse: WeatherData = this.getLocalStorageItem();
+  updateLocalStorageItem(value: Partial<WeatherData>): void {
+    const weatherDataParse = this.getLocalStorageItem();
     this.setLocalStorageItem({ ...weatherDataParse, ...value });
   }
 }

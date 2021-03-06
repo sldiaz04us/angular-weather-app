@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 
-import { AgreementDialogComponent } from './agreement-dialog/agreement-dialog.component';
+import { AgreementDialogComponent } from './agreement-dialog.component';
 
 @Injectable({
   providedIn: 'root'

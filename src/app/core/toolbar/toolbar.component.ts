@@ -13,7 +13,7 @@ import { } from 'googlemaps';
 
 import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 
-import { ErrorDialogService } from '../dialog/error-dialog.service';
+import { ErrorDialogService } from '../dialog/error-dialog/error-dialog.service';
 import { GeolocationApiService } from '../services/geolocation-api.service';
 
 @Component({

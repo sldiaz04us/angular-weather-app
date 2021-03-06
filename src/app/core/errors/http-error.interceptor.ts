@@ -10,8 +10,8 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 
-import { ErrorDialogService } from '../dialog/error-dialog.service';
-import { LoadingDialogService } from '../dialog/loading-dialog.service';
+import { ErrorDialogService } from '../dialog/error-dialog/error-dialog.service';
+import { LoadingDialogService } from '../dialog/loading-dialog/loading-dialog.service';
 
 
 @Injectable({
