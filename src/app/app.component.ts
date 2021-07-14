@@ -32,9 +32,6 @@ export class AppComponent {
 
   private handleSwUpdateAvailable(): void {
     this.swUpdate.available.subscribe(event => {
-      console.log('Current version is', event.current);
-      console.log('Available version is', event.available);
-
       this.appUpdateDialog.openDialog().afterClosed().subscribe(agree => {
         if (agree) {
           this.swUpdate.activateUpdate().then(() => this.location.reload());

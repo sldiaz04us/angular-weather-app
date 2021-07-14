@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   openWeatherApiKey: '{Your OpenWeather API key}',
+  firebase: '{Your firebaseConfig object}'
 };
 
 /*

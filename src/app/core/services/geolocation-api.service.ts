@@ -51,8 +51,6 @@ export class GeolocationApiService implements OnDestroy {
         takeUntil(this.subsNotifier),
         catchError(err => throwError(err))
       ).subscribe(geolocationStatus => {
-        console.log('GeolocationStatus:', geolocationStatus);
-
         this.geolocationStatus = geolocationStatus;
         this.geolocationStatusSubject.next(geolocationStatus);
         this.webStorageApiService.updateLocalStorageItem({ geolocationStatus });
@@ -105,14 +103,10 @@ export class GeolocationApiService implements OnDestroy {
         take(1),
         // finalize(() => resolve(true)) // when observable complete with or without error
       ).subscribe(async (location: GeolocationPosition) => {
-        console.log('Getting location:', location);
-
         this.saveGeolocationInLocalStorage(location);
         await this.setGeolocationNameWithGoogleApi();
         resolve(true);
       }, (error: GeolocationPositionError) => {
-        console.log('Error getting location:', error);
-
         this.showGeolocationErrorDenied(error);
         resolve(false);
       });
@@ -155,9 +149,6 @@ export class GeolocationApiService implements OnDestroy {
           lng: this.geolocationPosition.coords.longitude
         }
       }, async (geocoderResult, geocoderStatus) => {
-        console.log('Geocoder status:', geocoderStatus);
-        console.log('Geocoder result:', geocoderResult);
-
         if (geocoderStatus === google.maps.GeocoderStatus.OK) {
           const locationNameFiltered = geocoderResult.filter(result =>
             result.types.includes('locality') ||

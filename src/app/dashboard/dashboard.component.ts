@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -37,8 +38,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(
     private dashboardService: DashboardService,
     private route: ActivatedRoute,
-    private emptyStateService: EmptyStateService
-  ) { }
+    private emptyStateService: EmptyStateService,
+    title: Title
+  ) {
+    title.setTitle('Dashboard - Weather App');
+  }
 
   ngOnInit(): void {
     /* Using Resolvers */

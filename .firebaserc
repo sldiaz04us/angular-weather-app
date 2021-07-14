@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "angular-weather-pwa"
+  },
+  "targets": {
+    "angular-weather-pwa": {
+      "hosting": {
+        "weather-app": [
+          "angular-weather-pwa"
+        ]
+      }
+    }
   }
 }

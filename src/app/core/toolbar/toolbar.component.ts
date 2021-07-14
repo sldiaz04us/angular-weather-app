@@ -68,8 +68,6 @@ export class ToolbarComponent implements AfterViewInit {
   private placePredictionsCallback(
     results: google.maps.places.AutocompletePrediction[],
     status: google.maps.places.PlacesServiceStatus): void {
-    console.log('PlacePredictions status:', status);
-    console.log('PlacePredictions results:', results);
     /*
      * Google API run outside NgZone because Angular can't detect changes
      * made by async callbacks of third-party libraries
@@ -114,9 +112,6 @@ export class ToolbarComponent implements AfterViewInit {
   private placeDetailsCallback(
     result: google.maps.places.PlaceResult,
     status: google.maps.places.PlacesServiceStatus): void {
-    console.log('PlaceDetails status:', status);
-    console.log('PlaceDetails result:', result);
-
     this.ngZone.run(() => {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
         this.geolocationApiService.setGeolocationName(this.placeDescriptionSelected);
