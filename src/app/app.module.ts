@@ -29,8 +29,8 @@ export function geoLocationFactory(geoLocationService: GeolocationApiService
     CoreModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     MatSnackBarModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFireAnalyticsModule
+    environment.production ? AngularFireModule.initializeApp(environment.firebase) : [],
+    environment.production ? AngularFireAnalyticsModule : []
   ],
   providers: [
     {
